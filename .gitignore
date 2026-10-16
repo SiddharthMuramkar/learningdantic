@@ -1,0 +1,35 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+
+# --- Tooling caches ---
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Environment & secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Logfire local credentials (created by `logfire auth`) ---
+.logfire/
+logfire_credentials.json
+
+# --- Data / DBs produced by notebook exercises ---
+data/
+*.sqlite
+*.sqlite-journal
+*.db
+
+# --- OS / editor ---
+.DS_Store
+.idea/
+.vscode/
