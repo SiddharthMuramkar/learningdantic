@@ -36,7 +36,7 @@ Every notebook is tagged **Steer**, **Scope**, **Both**, or **Tooling** (setup, 
 | A Logfire account | **Optional.** Everything works without it. The free tier at [logfire.pydantic.dev](https://logfire.pydantic.dev) is 10M spans, logs or metrics a month, no card. | Free |
 | Time | ~30–45 minutes per notebook | — |
 
-**No key yet?** Notebooks **00 and 08** run completely free, on Pydantic AI's built-in fake
+**No key yet?** Notebooks **00, 08, 09, 10, 12, 13 and 14** run completely free, on Pydantic AI's built-in fake
 models (`TestModel`, `FunctionModel`). CI runs exactly that set on every push.
 
 ## Quickstart
@@ -93,7 +93,7 @@ That's it. There's no `asyncio`, no `nest_asyncio` and no `run_sync()` in any no
 
 ## What you'll learn
 
-Work through them in order. Notebooks 01–08 end with an **exercise**: try it first, then compare with the matching
+Work through them in order. Notebooks 01–14 end with an **exercise**: try it first, then compare with the matching
 notebook in [`solutions/`](solutions/). Every solution ends in `assert`s, so you know it really works.
 
 | # | Notebook | Tag | When you finish it, you can… |
@@ -107,8 +107,12 @@ notebook in [`solutions/`](solutions/). Every solution ends in `assert`s, so you
 | 06 | [Logfire observability](notebooks/06_logfire_observability.ipynb) *(optional)* | Tooling | See every tool call, token, retry and dollar in a live trace |
 | 07 | [History & streaming](notebooks/07_history_and_streaming.ipynb) | Scope | Decide what an agent *remembers*, and stream answers as they're written |
 | 08 | [Offline testing](notebooks/08_offline_testing.ipynb) | Tooling | Test steering and scope with **zero keys and zero cost** |
-
-**Coming next:** 09–14 — toolsets & MCP, capabilities & guardrails, multi-agent, evals, shipping a chat UI, and a capstone.
+| 09 | [Toolsets & MCP](notebooks/09_toolsets_and_mcp.ipynb) | Scope | Bundle tools, hide the dangerous ones, and plug in an MCP server |
+| 10 | [Capabilities & guardrails](notebooks/10_capabilities_and_guardrails.ipynb) | Both | Package behaviour as capabilities; add hooks, human approval and budgets |
+| 11 | [Multi-agent](notebooks/11_multi_agent.ipynb) | Both | Give each agent one job: delegate, route and hand off, on one shared budget |
+| 12 | [Evals](notebooks/12_evals.ipynb) | Steer | Prove your steering works with datasets and evaluators, not by feel |
+| 13 | [Ship it](notebooks/13_ship_it.ipynb) | Scope | Put an agent behind a chat UI and control what it remembers in a database |
+| 14 | [Capstone: support desk](notebooks/14_capstone_support_desk.ipynb) | Both | Design an agent by deciding which knob each rule belongs to, then prove it |
 
 ## Coming from an old tutorial?
 
@@ -122,8 +126,8 @@ These notebooks target v2 (2.57) only. Here's what changed:
 | `Agent('gpt-4o')` | needs a provider prefix: `Agent('openai:…')` |
 | `system_prompt=` | still works, but `instructions=` is preferred |
 | `Agent(instrument=True)` | removed; use `logfire.instrument_pydantic_ai()` (`setup()` does it) |
-| `history_processors=[...]` | `capabilities=[ProcessHistory(...)]` |
-| `MCPServerStdio`, `FastMCPToolset` | `MCPToolset` |
+| `history_processors=[...]` | `capabilities=[ProcessHistory(...)]` (notebook 13) |
+| `MCPServerStdio`, `FastMCPToolset` | `MCPToolset` (notebook 09) |
 | `nest_asyncio`, `run_sync()` in notebooks | `await agent.run(...)` |
 
 ## What it costs
@@ -154,7 +158,7 @@ Questions are welcome.
   provider's key. Support is already installed. (`xai:` needs `uv add "pydantic-ai-slim[xai]"`.)
 - **A ChatGPT/Codex subscription instead of an API key?** Install the Codex CLI, run `codex login` once, then set
   `MODEL=openai-codex:<model>` ([docs](https://pydantic.dev/docs/ai/models/openai-codex/)).
-- **No key at all?** Notebooks 00 and 08 run free.
+- **No key at all?** The free notebooks above still teach most of the course.
 
 ## Running notebooks from the terminal
 
