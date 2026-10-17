@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Pydantic AI docs
+    url: https://pydantic.dev/docs/ai/
+    about: The official docs for every Pydantic AI API the notebooks use.
+  - name: Logfire docs
+    url: https://pydantic.dev/docs/logfire/
+    about: Set up and use Logfire, the optional tracing tool.

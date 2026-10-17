@@ -1,0 +1,23 @@
+name: I'm stuck / a question
+description: Not sure what a cell means, or how to go further? Ask. No question is too small.
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: Questions are welcome here, beginner ones most of all. You don't need to have found a bug.
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: What are you trying to do, and where did you get stuck?
+    validations:
+      required: true
+  - type: input
+    id: notebook
+    attributes:
+      label: Notebook (if any)
+      placeholder: 07_history_and_streaming
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you tried (optional)

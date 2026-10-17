@@ -1,0 +1,82 @@
+name: Something in a notebook doesn't work
+description: A cell fails, hangs, or shows something different from its checkpoint.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! The [Troubleshooting table](https://github.com/SiddharthMuramkar/learningdantic#troubleshooting) in the README fixes most problems.
+
+        **Never paste an API key or your `.env` file here.** Issues are public.
+  - type: dropdown
+    id: notebook
+    attributes:
+      label: Which notebook?
+      options:
+        - 00 Setup & env check
+        - 01 First agent
+        - 02 Models & providers
+        - 03 Structured outputs
+        - 04 Tools
+        - 05 Dependencies
+        - 06 Logfire observability
+        - 07 History & streaming
+        - 08 Offline testing
+        - 09 Toolsets & MCP
+        - 10 Capabilities & guardrails
+        - 11 Multi-agent
+        - 12 Evals
+        - 13 Ship it
+        - 14 Capstone support desk
+        - A notebook in solutions/
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: what-you-ran
+    attributes:
+      label: Which cell, and what did you run?
+      description: The cell's first line is enough. Say if you changed anything in it.
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Error text
+      description: Paste the whole error. It is shown as code for you, so no backticks needed.
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: provider
+    attributes:
+      label: MODEL provider
+      description: "The setup cell prints it: `✅ ready: MODEL = openai:...` means openai."
+      options:
+        - openai
+        - anthropic
+        - google
+        - other
+        - test (the fake TestModel, no key)
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: macOS 26, Windows 11, Ubuntu 24.04...
+    validations:
+      required: true
+  - type: input
+    id: uv-version
+    attributes:
+      label: uv version
+      description: Run `uv --version` in a terminal and paste what it prints.
+      placeholder: uv 0.13.1
+  - type: checkboxes
+    id: restarted
+    attributes:
+      label: Before you send
+      options:
+        - label: I restarted the kernel (Kernel → Restart) and ran the setup cell again.
+          required: true
