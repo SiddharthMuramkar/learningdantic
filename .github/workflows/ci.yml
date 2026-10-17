@@ -40,8 +40,9 @@ jobs:
 
       - name: Unit tests, keyless notebooks and solutions
         # These run with zero API keys, using pydantic-ai's TestModel / FunctionModel.
+        # --overwrite saves each cell's output so the crash check below can read it.
         run: >-
-          uv run pytest
+          uv run pytest --overwrite
           tests
           notebooks/00_setup_and_env_check.ipynb
           notebooks/08_offline_testing.ipynb
@@ -53,13 +54,20 @@ jobs:
           solutions/08_offline_assertions.ipynb
           solutions/09_scoped_recipe_server.ipynb
           solutions/10_guarded_helpdesk.ipynb
+          solutions/11_support_triage.ipynb
           solutions/12_eval_your_steering.ipynb
           solutions/13_two_chats.ipynb
           solutions/14_capstone_extension.ipynb
 
+      - name: Fail on crashed cells
+        # An error raised inside agent.run can reach Jupyter as printed text, which nbmake counts as
+        # a pass. This reads the outputs saved above (keyless notebooks only) and fails on a traceback.
+        run: uv run python scripts/check_notebooks.py --executed
+
       - name: Smoke-run the live notebooks on the fake model
         # MODEL=test makes every Agent(MODEL) a TestModel: no key, no cost. This catches API drift,
-        # not wrong answers. To see real answers, run them with your key:
+        # not wrong answers. shortcut: no crash check here, because the fake model can't recover from a
+        # retry the way a real one does (03, 04); run them with your key to see real answers:
         #   uv run pytest notebooks/01_first_agent.ipynb
         env:
           MODEL: test
