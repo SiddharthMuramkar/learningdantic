@@ -68,7 +68,7 @@ Each question has a check. All but the last run without a key:
 
 | Question | How | Notebook |
 |---|---|---|
-| What was it offered? | `TestModel(call_tools=[])`, then `last_model_request_parameters.function_tools` | 08, 09, 14 |
+| What was it offered? | `TestModel(call_tools=[])`, then `last_model_request_parameters.function_tools` | 04, 08, 09, 14 |
 | What was it told? | the request's `.instructions`, or `info.instructions` in a `FunctionModel` | 05, 10, 14 |
 | What shape comes back? | `output_type` | 03 |
 | Do the fences hold? | `DeferredToolRequests`, `UsageLimitExceeded`, the hook's log | 10 |
