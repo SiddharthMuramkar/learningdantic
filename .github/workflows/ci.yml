@@ -62,7 +62,22 @@ jobs:
       - name: Fail on crashed cells
         # An error raised inside agent.run can reach Jupyter as printed text, which nbmake counts as
         # a pass. This reads the outputs saved above (keyless notebooks only) and fails on a traceback.
-        run: uv run python scripts/check_notebooks.py --executed
+        run: >-
+          uv run python scripts/check_notebooks.py --executed
+          notebooks/00_setup_and_env_check.ipynb
+          notebooks/08_offline_testing.ipynb
+          notebooks/09_toolsets_and_mcp.ipynb
+          notebooks/10_capabilities_and_guardrails.ipynb
+          notebooks/12_evals.ipynb
+          notebooks/13_ship_it.ipynb
+          notebooks/14_capstone_support_desk.ipynb
+          solutions/08_offline_assertions.ipynb
+          solutions/09_scoped_recipe_server.ipynb
+          solutions/10_guarded_helpdesk.ipynb
+          solutions/11_support_triage.ipynb
+          solutions/12_eval_your_steering.ipynb
+          solutions/13_two_chats.ipynb
+          solutions/14_capstone_extension.ipynb
 
       - name: Smoke-run the live notebooks on the fake model
         # MODEL=test makes every Agent(MODEL) a TestModel: no key, no cost. This catches API drift,

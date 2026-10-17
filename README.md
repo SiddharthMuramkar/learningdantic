@@ -38,7 +38,7 @@ Every notebook is tagged **Steer**, **Scope**, **Both**, or **Tooling** (setup, 
 
 **No key yet?** Notebooks **00, 08, 09, 10, 12, 13 and 14** run completely free, on Pydantic AI's built-in fake
 models (`TestModel`, `FunctionModel`). CI runs that set on every push, and smoke-runs the rest on the
-fake model too.
+fake model too (that catches broken code, not wrong answers).
 
 ## Quickstart
 

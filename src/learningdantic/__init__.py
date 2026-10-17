@@ -49,6 +49,6 @@ def has_key(model: str) -> bool:
     """True if `model` can be used here (its key or login is set up). Free: no request is made."""
     try:
         infer_model(model)
-    except UserError:
+    except (UserError, ImportError):  # ImportError: that provider's extra isn't installed
         return False
     return True

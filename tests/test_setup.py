@@ -22,6 +22,7 @@ def test_the_fake_model_needs_no_key():
 def test_a_missing_key_is_reported():
     assert not has_key("openai:gpt-6-luna")
     assert not has_key("anthropic:claude-haiku-5-5")  # the old `LIVE` check got this one wrong
+    assert not has_key("xai:grok-4")  # its extra isn't installed
 
 
 def test_a_blank_key_in_env_counts_as_missing(tmp_path):

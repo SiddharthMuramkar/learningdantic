@@ -45,6 +45,8 @@ def crashes(nb) -> list[str]:
     An error raised inside `agent.run` can reach Jupyter as printed text instead of an error, so
     nbmake reports the notebook as passing. Reading the saved outputs catches it.
     """
+    if not any(cell.get("outputs") for cell in nb.cells):
+        return ["no saved outputs: run it with `uv run pytest --overwrite <notebook>` first"]
     found = []
     for i, cell in enumerate(nb.cells):
         for out in cell.get("outputs", []):
@@ -70,6 +72,7 @@ def self_test() -> None:
     assert crashes(good) == [], crashes(good)
     good.cells[1].outputs.append(printed)
     assert len(crashes(good)) == 1, crashes(good)
+    assert len(crashes(bad)) == 1, crashes(bad)  # never executed
     print("self-test ok")
 
 
