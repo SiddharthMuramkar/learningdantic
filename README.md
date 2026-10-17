@@ -1,107 +1,129 @@
 # learningdantic
 
-**Learn [Pydantic AI v2](https://pydantic.dev/docs/ai/) + [Logfire](https://pydantic.dev/logfire) by building, not by reading.**
+**You know some Python. You've never built an AI agent. Start here.**
 
-A set of hands-on Jupyter notebooks that teach you the *real* framework API — no wrappers, no hidden magic. You run every cell yourself, hit every error yourself, and watch every agent run light up in [Logfire](https://logfire.pydantic.dev)'s observability UI. Later phases extend to agent orchestration, MCP, evals, FastAPI serving, and SQLModel databases.
+This is a set of Jupyter notebooks that teach you [Pydantic AI](https://pydantic.dev/docs/ai/) (the agent framework from the Pydantic team) and [Logfire](https://logfire.pydantic.dev) (their observability tool) the only way that actually sticks: by writing and running real code, cell by cell, with an exercise at the end of every notebook.
+
+No videos to sit through, no walls of theory — you build a real agent in the first five minutes of notebook 01, and every concept after that is another runnable cell.
 
 ![CI](https://github.com/siddharth-0044/learningdantic/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.13%2B-blue)
 ![uv](https://img.shields.io/badge/uv-managed-de3e77)
 
-## Prerequisites
+## Who this is for
 
-- [uv](https://docs.astral.sh/uv/) — fast Python package manager (`curl -LsSf https://astral.sh/uv/install.sh | sh`)
-- An LLM API key (default: [OpenAI](https://platform.openai.com/) — or use your ChatGPT/Codex subscription, see [openai-codex](https://pydantic.dev/docs/ai/models/openai-codex/))
-- *Optional*: a free [Logfire](https://logfire.pydantic.dev) account — 10M spans/month, no credit card
+- You can write basic Python (functions, classes, `pip install`)
+- You've **never** built an agent, or you've fumbled with one and want to do it properly
+- You want to *understand* the framework — not copy a wrapper someone else wrote
+
+## What you need
+
+| Thing | Details | Cost |
+|---|---|---|
+| An LLM API key | [OpenAI](https://platform.openai.com/) is the default — **or use your ChatGPT/Codex subscription** ([how](https://pydantic.dev/docs/ai/models/openai-codex/)), or [Anthropic](https://console.anthropic.com/) / [Google AI](https://aistudio.google.com/) keys (one line to switch) | A few **cents** per notebook |
+| A Logfire account | **Optional.** Everything works without it — [logfire.pydantic.dev](https://logfire.pydantic.dev), free tier is 10M events/month, no card | Free |
+| Time | ~30–45 minutes per notebook, at your own pace | — |
+
+If you have *no* API key at all: notebook 00 and notebook 08 run **completely free** using Pydantic AI's built-in test models — you can verify the whole setup works before paying anyone anything.
 
 ## Quickstart
+
+**1. Install [uv](https://docs.astral.sh/uv/)** (Python's modern package manager — it manages Python itself, so you don't need to install or worry about versions):
+
+```bash
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows (PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+**2. Clone and set up** (from any folder you keep projects in):
 
 ```bash
 git clone https://github.com/siddharth-0044/learningdantic.git
 cd learningdantic
-
-uv sync                      # one command: Python 3.14 + .venv + every dependency
-cp .env.example .env         # then edit .env: set OPENAI_API_KEY=...
-
-uv run logfire auth          # OPTIONAL: browser login → traces appear in logfire.pydantic.dev
-uv run jupyter lab           # Jupyter runs inside the project venv — no kernel setup
+uv sync                      # installs Python 3.14 + everything else, into .venv/
 ```
 
-Open `notebooks/00_setup_and_env_check.ipynb` and run every cell top to bottom. That's it.
-
-> **Heads-up — version drift.** Pydantic AI hit **v2 in June 2026**. Almost every blog post and YouTube tutorial made before that uses APIs that no longer exist (`result.data`, `system_prompt=`, `Agent(instrument=True)`, bare model names…). These notebooks target **v2 only** and flag the stale patterns along the way, so you learn both the new API and why old snippets break.
-
-## The curriculum
-
-### Phase 1 — Pydantic AI + Logfire core ✅
-
-| # | Notebook | You will learn |
-|---|----------|----------------|
-| 00 | [Setup & env check](notebooks/00_setup_and_env_check.ipynb) | `.env` loading, token-optional Logfire, the asyncio ground rules, a **keyless** TestModel smoke run |
-| 01 | [First agent](notebooks/01_first_agent.ipynb) | `Agent(instructions=...)`, `await run()`, `result.output`, `result.usage` (a *property* in v2), `all_messages()` |
-| 02 | [Models & providers](notebooks/02_models_and_providers.ipynb) | v2 model-string grammar (`openai:` = Responses API), per-run model settings, `FallbackModel`, cost comparison |
-| 03 | [Structured outputs](notebooks/03_structured_outputs.ipynb) | `output_type=BaseModel`, union outputs, `output_validator` + `ModelRetry` |
-| 04 | [Tools](notebooks/04_tools.ipynb) | `@agent.tool` vs `@agent.tool_plain`, `RunContext`, docstring→schema, `ModelRetry` from inside tools |
-| 05 | [Dependencies & DI](notebooks/05_dependencies.ipynb) | `deps_type` / `deps=` / `ctx.deps`, dynamic `@agent.instructions`, why DI matters |
-| 06 | [Logfire observability](notebooks/06_logfire_observability.ipynb) | reading traces, custom `logfire.span`, agent `name=`, cost badges, finding retries in the UI |
-| 07 | [History & streaming](notebooks/07_history_and_streaming.ipynb) | `message_history`, serializing conversations, `run_stream` + `stream_output` |
-| 08 | [Offline testing](notebooks/08_offline_testing.ipynb) | `TestModel`, `FunctionModel`, `capture_run_messages`, `ALLOW_MODEL_REQUESTS` — develop with **zero API keys** |
-
-Each notebook ends with an **exercise** — try it yourself first, then compare with the matching notebook in [`solutions/`](solutions/).
-
-### Phase 2 — Orchestration & production 🗓️ (roadmap)
-
-| # | Topic | Highlights |
-|---|-------|-----------|
-| 09 | Toolsets & MCP | `FunctionToolset`, `MCPToolset` / `MCP` capability, a local FastMCP server |
-| 10 | Multi-agent orchestration | agent delegation (`usage=ctx.usage`), programmatic hand-offs, output-function routers, parallelism, `pydantic-graph` |
-| 11 | Evals | `pydantic-evals` datasets, `LLMJudge`, experiments in the Logfire UI |
-| 12 | Serving with FastAPI | build agent once, lifespan state, SSE streaming, `logfire.instrument_fastapi(app)` |
-| 13 | Database-backed agents | SQLModel + SQLite (FastAPI's official SQL stack), the validated text-to-SQL pattern |
-| 14 | Capstone | support assistant: FastAPI + SQLite persistence + multi-agent + full Logfire tracing + offline test suite |
-
-## The asyncio ground rules (baked into notebook 00)
-
-Jupyter notebooks run an asyncio event loop, and agents are async. Five rules keep you out of trouble:
-
-1. **Top-level `await` just works** in modern Jupyter: `result = await agent.run('...')`. No `nest_asyncio`, ever (that's for legacy setups/Colab).
-2. **`run_sync()` only at the top level** of a notebook cell. Never inside a tool, an output function, or another async function — sync code runs on worker threads and nested `run_sync` **deadlocks silently** (sometimes "works" once first, then hangs forever).
-3. **Tools and output functions are always `async def`.** If they delegate to another agent: `await other_agent.run(...)`.
-4. **`RuntimeError: Event loop is closed`** → restart the kernel and recreate your agent/model. Don't reuse a model across a dead loop.
-5. **Logfire is configured once per kernel** (`logfire.configure()` before any `instrument_*()` call) — re-running the setup cell after a kernel restart is fine and expected.
-
-## Running the notebooks
+**3. Add your key:**
 
 ```bash
-uv run jupyter lab          # start Jupyter (uses the project .venv automatically)
-uv run pytest               # executes ALL notebooks top-to-bottom (needs your .env keys)
-uv run pytest notebooks/00_setup_and_env_check.ipynb notebooks/08_offline_testing.ipynb   # keyless subset (what CI runs)
+cp .env.example .env         # then open .env in any editor and paste your key
 ```
 
-CI (GitHub Actions) runs ruff + the two **keyless** notebooks on every push — no secrets needed, thanks to `TestModel`.
+**4. Start learning:**
 
-## Troubleshooting
+```bash
+uv run jupyter lab           # opens Jupyter in your browser, correct environment guaranteed
+```
 
-| Symptom | Cause & fix |
-|---|---|
-| `ModuleNotFoundError: pydantic_ai` | Wrong kernel. In the notebook run `import sys; sys.executable` — it must end in `learningdantic/.venv/bin/python`. Restart Jupyter via `uv run jupyter lab` from the repo root. |
-| Cell hangs forever | You called `run_sync()` inside a tool or async function → silent deadlock. Use `async def` + `await agent.run(...)`. Restart the kernel to clear it. |
-| `RuntimeError: Event loop is closed` | A previous loop died with your model's connection pool. Restart kernel, recreate the agent. |
-| Nothing shows in the Logfire UI | Did you run `uv run logfire auth`? Check `.logfire/` exists; check `LOGFIRE_TOKEN` if you use one. |
-| `UserError` on model name | v2 requires prefixed model strings: `'openai:gpt-6.1-sol'`, not `'gpt-6.1-sol'`. |
-| `result.data` doesn't exist | You found an old tutorial. v2 is `result.output`; `result.usage` is a property. |
+Open `notebooks/00_setup_and_env_check.ipynb` and run it top to bottom. That's the whole setup.
 
-## Why Jupyter and not marimo?
+> ⚠️ **One thing to know before you Google anything:** Pydantic AI released **v2 in June 2026**, and most blog posts and YouTube tutorials out there were written for the old API. They will show you code that no longer works (`result.data`, `system_prompt=`, bare model names…). These notebooks target v2 only — and they call out the stale patterns when they matter, so you'll recognize them.
 
-[marimo](https://docs.marimo.io/) (reactive, git-friendly `.py` notebooks) is genuinely interesting — but reactive auto-rerun is the wrong default when *every cell costs LLM tokens*, and the ecosystem for agent dev is still `.ipynb`. Revisit later.
+## What you'll learn
 
-## Further reading (v2-current, verified Oct 2026)
+Work through them in order — each one builds on the last. Every notebook ends with an **exercise**: try it yourself first, then compare against the matching notebook in [`solutions/`](solutions/). (You only cheat yourself by skipping straight to solutions — the struggle *is* the lesson.)
 
-- [Pydantic AI docs](https://pydantic.dev/docs/ai/) — start with [agents](https://pydantic.dev/docs/ai/core-concepts/agent/), [output](https://pydantic.dev/docs/ai/core-concepts/output/), [tools](https://pydantic.dev/docs/ai/tools-toolsets/tools/), [dependencies](https://pydantic.dev/docs/ai/core-concepts/dependencies/)
-- [Testing guide](https://pydantic.dev/docs/ai/guides/testing/) · [Multi-agent guide](https://pydantic.dev/docs/ai/guides/multi-agent-applications/)
-- [Logfire docs](https://pydantic.dev/docs/logfire/) · [Pydantic AI ↔ Logfire integration](https://pydantic.dev/docs/ai/integrations/logfire/)
-- Official examples (bank support, chat app with FastAPI, SQL generation, flight booking): [pydantic.dev/docs/ai/examples/](https://pydantic.dev/docs/ai/examples/)
+| # | Notebook | When you finish it, you can… |
+|---|---|---|
+| 00 | [Setup & env check](notebooks/00_setup_and_env_check.ipynb) | Confirm everything works — with zero API keys, zero cost |
+| 01 | [First agent](notebooks/01_first_agent.ipynb) | Build and run an agent, and know exactly what a run *cost* you |
+| 02 | [Models & providers](notebooks/02_models_and_providers.ipynb) | Switch models/providers, tune settings, survive outages with fallbacks |
+| 03 | [Structured outputs](notebooks/03_structured_outputs.ipynb) | Get validated Python objects out of a model instead of fragile text |
+| 04 | [Tools](notebooks/04_tools.ipynb) | Give an agent your own functions to call — and make it use them honestly |
+| 05 | [Dependencies & DI](notebooks/05_dependencies.ipynb) | Inject per-run state (users, HTTP clients) like a proper backend engineer |
+| 06 | [Logfire observability](notebooks/06_logfire_observability.ipynb) | See every tool call, token, retry and dollar in a live trace |
+| 07 | [History & streaming](notebooks/07_history_and_streaming.ipynb) | Give agents memory, and stream output as it's generated |
+| 08 | [Offline testing](notebooks/08_offline_testing.ipynb) | Test your whole agent with **zero API keys and zero cost** |
+
+After Phase 1 you have every core skill. The roadmap for what comes next lives in [ROADMAP notes below](#whats-next) — multi-agent orchestration, MCP, evals, FastAPI serving, and SQL databases.
+
+## The five asyncio rules (read once, save hours)
+
+Jupyter runs Python's async loop behind every cell, and agents are async. These rules are baked into notebook 00, but here they are for reference:
+
+1. **Top-level `await` just works**: `result = await agent.run('...')`. Never install `nest_asyncio`.
+2. **`run_sync()` only at the top level of a cell** — never inside a tool or async function. Nested `run_sync` *silently deadlocks*: your cell just hangs, no error.
+3. **Tools and output functions are always `async def`**.
+4. **`RuntimeError: Event loop is closed`** → restart the kernel (Kernel → Restart), re-run the setup cell.
+5. **A cell that hangs forever** → you broke rule 2. Restart the kernel, fix the code.
+
+## Troubleshooting (the stuff beginners actually hit)
+
+| Symptom | What it means | Fix |
+|---|---|---|
+| `ModuleNotFoundError: pydantic_ai` | Notebook is running the wrong Python | Restart Jupyter with `uv run jupyter lab` from the repo root. Check with `import sys; sys.executable` — it must end in `learningdantic/.venv/bin/python` |
+| A cell hangs forever, no error | `run_sync()` called inside a tool/async function | Kernel → Restart, make the function `async def` + `await` |
+| `UserError` mentioning the model name | Old tutorial syntax | v2 needs a prefix: `'openai:gpt-6.1-sol'`, not `'gpt-6.1-sol'` |
+| `result.data` doesn't exist | Same — old tutorial | It's `result.output` now; `result.usage` is a property |
+| `UserError: Set the OPENAI_API_KEY...` | No key in `.env` | Add it, then re-run the setup cell (it reloads `.env`) |
+| Nothing shows in the Logfire UI | Not authenticated | `uv run logfire auth` once, re-run the notebook |
+
+Stuck on something not listed here? [Open an issue](https://github.com/siddharth-0044/learningdantic/issues) — questions are welcome, and they make the repo better for the next person.
+
+## No OpenAI key?
+
+- **Have a ChatGPT/Codex subscription?** Use it directly — no API key needed: set `MODEL=openai-codex:<model>` in `.env` ([docs](https://pydantic.dev/docs/ai/models/openai-codex/))
+- **Have an Anthropic or Google key instead?** Set `MODEL=anthropic:claude-...` or `MODEL=google:gemini-...` in `.env` — all provider support is already installed
+- **No key at all?** Notebooks 00 and 08 run free (test models). Everything else needs a key
+
+## Running notebooks from the terminal
+
+```bash
+uv run pytest                             # executes ALL notebooks top-to-bottom (uses your .env)
+uv run pytest notebooks/00_setup_and_env_check.ipynb notebooks/08_offline_testing.ipynb   # the free pair CI runs
+```
+
+## What's next
+
+Phase 1 (notebooks 00–08, this repo) is complete. Planned Phase 2: multi-agent orchestration, MCP servers, evals, serving agents with FastAPI, SQLModel databases, and a capstone project. Watch this repo or open an issue if you'd like to nudge the priorities.
+
+## Contributing
+
+Found a typo, a stale API call, or a confusing explanation? PRs are very welcome — this is a learning project for everyone, including its author. Keep the same tone: verified code, honest checkpoints, no hand-waving.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) — learn from it, fork it, build on it.
