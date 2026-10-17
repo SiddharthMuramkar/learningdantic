@@ -29,6 +29,10 @@ data/
 *.sqlite-journal
 *.db
 
+# --- Claude Code: parallel-session worktrees and personal settings ---
+.claude/worktrees/
+.claude/settings.local.json
+
 # --- OS / editor ---
 .DS_Store
 .idea/

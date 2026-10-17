@@ -37,7 +37,8 @@ Every notebook is tagged **Steer**, **Scope**, **Both**, or **Tooling** (setup, 
 | Time | ~30–45 minutes per notebook | — |
 
 **No key yet?** Notebooks **00, 08, 09, 10, 12, 13 and 14** run completely free, on Pydantic AI's built-in fake
-models (`TestModel`, `FunctionModel`). CI runs exactly that set on every push.
+models (`TestModel`, `FunctionModel`). CI runs that set on every push, and smoke-runs the rest on the
+fake model too (that catches broken code, not wrong answers).
 
 ## Quickstart
 
@@ -141,7 +142,7 @@ model isn't in the price table yet). Want stronger answers? Put `MODEL=openai:gp
 
 | Symptom | What it means | Fix |
 |---|---|---|
-| `ModuleNotFoundError: learningdantic` or `pydantic_ai` | The notebook is running the wrong Python | Start Jupyter with `uv run jupyter lab` from the repo root, or pick the *Python 3 (learningdantic)* kernel |
+| `ModuleNotFoundError: learningdantic` or `pydantic_ai` | The notebook is running the wrong Python | Start Jupyter with `uv run jupyter lab` from the repo root, or pick the kernel from this folder's `.venv` (shown as *Python 3 (ipykernel)*) |
 | `RuntimeError: This event loop is already running` | `run_sync()` was used in a notebook | Use `await agent.run(...)` |
 | `UserError: … run_sync() … cannot be used inside a synchronous tool` | A plain `def` function calls another agent | Make that function `async def` and `await other_agent.run(...)` |
 | `UserError` mentioning the model name | Old tutorial syntax | Add the prefix: `'openai:…'`, not a bare model name |

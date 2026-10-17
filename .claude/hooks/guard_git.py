@@ -51,7 +51,41 @@ def reason(command: str) -> str | None:
     return None
 
 
+BLOCKED = [
+    "git push origin main",
+    "git push origin HEAD:main",
+    "git push -f origin feat/x",
+    "git push --force-with-lease origin feat/x",
+    "git push origin +feat/x",
+    "git -C /tmp/repo push origin main",
+    "cd repo && git push origin main",
+    "gh pr merge 3 --auto",
+    "gh pr merge 3 --admin --squash",
+]
+ALLOWED = [
+    "git push origin feat/x",
+    "git push -u origin feat/x",
+    "git push origin --delete feat/x",
+    "gh pr merge 3 --squash",
+    'echo "git push origin main"',
+    # Known gaps, left on purpose: branch protection on main is the real backstop.
+    "git push",
+    "git --no-pager push origin main",
+]
+
+
+def self_test() -> None:
+    for command in BLOCKED:
+        assert reason(command), f"should block: {command}"
+    for command in ALLOWED:
+        assert reason(command) is None, f"should allow: {command}"
+    print("self-test ok")
+
+
 def main() -> int:
+    if sys.argv[1:] == ["--self-test"]:
+        self_test()
+        return 0
     try:
         command = json.load(sys.stdin).get("tool_input", {}).get("command", "")
         why = reason(command)
