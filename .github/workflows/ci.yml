@@ -5,19 +5,26 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
 
-      - name: Install Python (respects .python-version)
-        run: uv python install
-
-      - name: Sync dependencies
+      - name: Sync dependencies (uv installs the Python in .python-version)
         run: uv sync --locked
 
       - name: Lint (ruff)
@@ -25,16 +32,17 @@ jobs:
           uv run ruff check .
           uv run ruff format --check .
 
-      - name: Check course rules (setup cell, no asyncio, no run_sync)
+      - name: Check course rules and the git guard hook
         run: |
           uv run python scripts/check_notebooks.py --self-test
           uv run python scripts/check_notebooks.py
+          uv run python .claude/hooks/guard_git.py --self-test
 
-      - name: Execute keyless notebooks and solutions
+      - name: Unit tests, keyless notebooks and solutions
         # These run with zero API keys, using pydantic-ai's TestModel / FunctionModel.
-        # The rest need your key, so run them locally: uv run pytest notebooks/01_first_agent.ipynb
         run: >-
           uv run pytest
+          tests
           notebooks/00_setup_and_env_check.ipynb
           notebooks/08_offline_testing.ipynb
           notebooks/09_toolsets_and_mcp.ipynb
@@ -48,3 +56,20 @@ jobs:
           solutions/12_eval_your_steering.ipynb
           solutions/13_two_chats.ipynb
           solutions/14_capstone_extension.ipynb
+
+      - name: Smoke-run the live notebooks on the fake model
+        # MODEL=test makes every Agent(MODEL) a TestModel: no key, no cost. This catches API drift,
+        # not wrong answers. To see real answers, run them with your key:
+        #   uv run pytest notebooks/01_first_agent.ipynb
+        env:
+          MODEL: test
+        run: >-
+          uv run pytest
+          notebooks/01_first_agent.ipynb
+          notebooks/02_models_and_providers.ipynb
+          notebooks/03_structured_outputs.ipynb
+          notebooks/04_tools.ipynb
+          notebooks/05_dependencies.ipynb
+          notebooks/06_logfire_observability.ipynb
+          notebooks/07_history_and_streaming.ipynb
+          notebooks/11_multi_agent.ipynb

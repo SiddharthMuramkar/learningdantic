@@ -14,6 +14,8 @@ from pathlib import Path
 
 import logfire
 from dotenv import find_dotenv, load_dotenv
+from pydantic_ai.exceptions import UserError
+from pydantic_ai.models import infer_model
 
 __version__ = "0.1.0"
 
@@ -25,6 +27,11 @@ def setup() -> str:
     """Load .env, wire up Logfire, and return the model string the notebooks should use."""
     env_file = find_dotenv(usecwd=True)  # walks up from notebooks/ to the repo root
     load_dotenv(env_file)  # no override: a MODEL=... set in your shell wins over .env
+    # A key line left blank in .env (`OPENAI_API_KEY=`) means "no key", so drop it.
+    for name in [
+        n for n, value in os.environ.items() if n.endswith("_API_KEY") and not value.strip()
+    ]:
+        del os.environ[name]
     # Notebooks run inside notebooks/, but `logfire projects new` saves credentials next to .env.
     root = Path(env_file).parent if env_file else Path.cwd()
     os.environ.setdefault("LOGFIRE_CREDENTIALS_DIR", str(root / ".logfire"))
@@ -36,3 +43,12 @@ def setup() -> str:
     model = os.getenv("MODEL", DEFAULT_MODEL)
     print(f"✅ ready: MODEL = {model}")
     return model
+
+
+def has_key(model: str) -> bool:
+    """True if `model` can be used here (its key or login is set up). Free: no request is made."""
+    try:
+        infer_model(model)
+    except UserError:
+        return False
+    return True
