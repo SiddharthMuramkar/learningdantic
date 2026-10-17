@@ -1,0 +1,35 @@
+name: An API changed / the docs say otherwise
+description: A notebook uses an API that changed, or the official docs now say something different.
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: Pydantic AI moves fast, so this happens. Thanks for checking!
+  - type: input
+    id: where
+    attributes:
+      label: Notebook and cell
+      placeholder: 04_tools, the cell that starts with `agent = Agent(`
+    validations:
+      required: true
+  - type: textarea
+    id: notebook-does
+    attributes:
+      label: What the notebook does
+      description: The line or idea that looks out of date.
+    validations:
+      required: true
+  - type: textarea
+    id: docs-say
+    attributes:
+      label: What the current docs say
+      description: A link to the docs page, and the part that is different.
+    validations:
+      required: true
+  - type: textarea
+    id: how-checked
+    attributes:
+      label: How you checked
+      description: For example, Context7 `/pydantic/pydantic-ai`, or the installed version from `uv pip show pydantic-ai`.
+    validations:
+      required: true
