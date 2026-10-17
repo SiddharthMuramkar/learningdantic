@@ -13,7 +13,7 @@ dependencies = [
     # Pydantic AI v2 (stable since 2026-06) — bundles the openai/anthropic/google/logfire/mcp/evals extras,
     # so switching providers later is just a .env edit.
     "pydantic-ai>=2.57.0,<3",
-    # Explicit: we call logfire.configure() / instrument_pydantic_ai() directly in every notebook.
+    # Explicit: learningdantic.setup() calls logfire.configure() / instrument_pydantic_ai().
     # <6: logfire 6.0 is still in beta as of Oct 2026.
     "logfire>=5.2,<6",
     "python-dotenv>=1.0",
@@ -48,6 +48,6 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.pytest.ini_options]
 # nbmake turns `uv run pytest` into "execute every notebook top-to-bottom".
-# Needs your .env keys locally; CI only executes the two keyless notebooks (00, 08).
+# Needs your .env keys locally; CI only executes the keyless list in .github/workflows/ci.yml.
 testpaths = ["notebooks"]
 addopts = "--nbmake --nbmake-timeout=600"

@@ -19,7 +19,7 @@ build/
 .env.*
 !.env.example
 
-# --- Logfire local credentials (created by `logfire auth`) ---
+# --- Logfire project credentials (created by `logfire projects new` / `logfire projects use`) ---
 .logfire/
 logfire_credentials.json
 

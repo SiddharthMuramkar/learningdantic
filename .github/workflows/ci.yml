@@ -25,8 +25,16 @@ jobs:
           uv run ruff check .
           uv run ruff format --check .
 
-      - name: Execute keyless notebooks (00 + 08)
-        # These two notebooks run with zero API keys: notebook 00 smoke-tests
-        # the environment with pydantic-ai's TestModel, notebook 08 teaches
-        # offline testing. Everything else needs your keys → run locally.
-        run: uv run pytest notebooks/00_setup_and_env_check.ipynb notebooks/08_offline_testing.ipynb
+      - name: Check course rules (setup cell, no asyncio, no run_sync)
+        run: |
+          uv run python scripts/check_notebooks.py --self-test
+          uv run python scripts/check_notebooks.py
+
+      - name: Execute keyless notebooks and solutions
+        # These run with zero API keys, using pydantic-ai's TestModel / FunctionModel.
+        # The rest need your key, so run them locally: uv run pytest notebooks/01_first_agent.ipynb
+        run: >-
+          uv run pytest
+          notebooks/00_setup_and_env_check.ipynb
+          notebooks/08_offline_testing.ipynb
+          solutions/08_offline_assertions.ipynb
