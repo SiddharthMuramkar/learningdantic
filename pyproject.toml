@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "learningdantic"
 version = "0.1.0"
-description = "Hands-on Jupyter notebooks for learning Pydantic AI v2 + Logfire — agent orchestration by building, not by reading."
+description = "Hands-on Jupyter notebooks: learn to steer and scope AI agents with Pydantic AI v2 (Logfire optional)."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.13"

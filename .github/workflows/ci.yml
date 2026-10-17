@@ -37,4 +37,14 @@ jobs:
           uv run pytest
           notebooks/00_setup_and_env_check.ipynb
           notebooks/08_offline_testing.ipynb
+          notebooks/09_toolsets_and_mcp.ipynb
+          notebooks/10_capabilities_and_guardrails.ipynb
+          notebooks/12_evals.ipynb
+          notebooks/13_ship_it.ipynb
+          notebooks/14_capstone_support_desk.ipynb
           solutions/08_offline_assertions.ipynb
+          solutions/09_scoped_recipe_server.ipynb
+          solutions/10_guarded_helpdesk.ipynb
+          solutions/12_eval_your_steering.ipynb
+          solutions/13_two_chats.ipynb
+          solutions/14_capstone_extension.ipynb
