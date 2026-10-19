@@ -1,6 +1,6 @@
 # Review: 09 playwright
 
-PR: branch `09-playwright` (built from `specs-base`, then merged with `origin/main` twice). `Status:` in `specs/09-playwright.md` stays `todo`, see "Never ran or not verified".
+PR: branch `09-playwright` (built from `specs-base`, then merged with `origin/main` twice). `Status: done` since 03, 04, 05 and 07 landed on main and the four e2e tests passed on this branch (see the last two rows of the table).
 
 ## What I built
 - `app/tests/e2e/conftest.py`: `app_url` (session fixture) starts `python -m uvicorn app.main:app` in a second process on a free `127.0.0.1` port. Its environment gets `MODEL=test` and the test `DATABASE_URL` taken from `app.db.engine` (the same database `clean_tables` empties). It polls `/health` for up to 30 s, writes the server log to a temp file (shown in the failure message) and stops the server at the end. `expect.set_options(timeout=10_000)`, plus an autouse fixture that sets the page's default timeout to 10 s, so a wrong locator fails in 10 s, not 30 s.
@@ -27,16 +27,21 @@ PR: branch `09-playwright` (built from `specs-base`, then merged with `origin/ma
 | Same: `ACME_KEEP_TEST_DB=1 ... -k approves --tracing on`, then `psql <test-db> -c "select ... from refunds"` | one row: 1, 1042, 1200, `executed`; matches the episode |
 | `playwright show-trace` | not run (it opens a GUI window); the folder name and `trace.zip` path in the episode were checked with `ls` |
 | On this branch after the final merge: `pytest app/tests --ignore=app/tests/e2e` | 7 passed |
-| On this branch after the final merge: `pytest app/tests/e2e` | **4 failed**: `assert 501 == 201`, because 03 (tickets route), 04 (agent) and 07 (approvals) are not on main yet |
+| On this branch after the second merge (03 and 07 not yet on main): `pytest app/tests/e2e` | 4 failed: `assert 501 == 201` (03's tickets route missing) |
 | `scripts/check_notebooks.py` | 29 notebooks, 0 problems |
 | `/code-review` (high) | 5 low findings, none fixed (see below) |
 | `/security-review` | no findings (test-only code, fixed argv, loopback server, no template input in the workflow) |
 
+| After 03 (#12) landed: `git merge origin/main`, `uv sync --group app` | clean merge |
+| `pytest app/tests/e2e` | **4 passed in 3.64 s** |
+| The Check: ruff, format, `check_notebooks.py`, `pytest app/tests` | all green; 34 passed (e2e included) |
+| `gh pr checks 11` on the first push (03 missing) | `ci` pass; `fullstack` fail with the 501 above; this proved the Chromium install, server start and test steps run on GitHub |
+
 ## What failed or never ran
-- The four e2e tests have **not** passed on this branch: only on a scratch merge of the siblings' local branches. They are red here until 03, 04 and 07 are on main. The `fullstack` job will be red on this PR for the same reason (it is not a required check).
-- `ci.yml` steps were never run on GitHub; the YAML parses and the step list is right. `playwright install --with-deps` needs `sudo apt` on the runner, which `ubuntu-latest` allows.
+- **PR #11 merged early.** Only `ci` is required, so auto-merge landed it (04:57 UTC) while `fullstack` was red and `Status` was `todo`. This follow-up PR only ticks the spec and updates this note; the code is unchanged and the four e2e tests pass on main + this branch.
+- The first push was red in `fullstack` (501, 03 not on main yet). It is fixed by the merge above; the post-merge `fullstack` run is pending at the time of writing.
+- The upload-traces step has not run on GitHub (it only runs on failure and the first failure had no trace files worth checking).
 - `playwright show-trace` was not opened (GUI).
-- The Check (SPEC.md) is red on this branch for the reason above.
 - My first test run used `ACME_TEST_DB=acme_09_test` (the old conftest); I dropped that database by name afterwards, and my own `acme_4073cf03_test` the same way. I touched no other session's database.
 - I changed no app code. I messaged session 05 once: its draft `index.html` loaded `/static/approvals.js`, but `main.py` mounts the folder at `/`. Its merged page uses the relative paths, so that was resolved.
 
