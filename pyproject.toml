@@ -22,6 +22,14 @@ dependencies = [
 ]
 
 [dependency-groups]
+app = [
+    "alembic>=1.20.0",
+    "fastapi[standard]>=0.146.0",
+    "logfire[fastapi,sqlalchemy]>=5.2,<6",
+    "psycopg[binary]>=3.3.6",
+    "pytest-playwright>=0.10.0",
+    "sqlalchemy>=2.1.5",
+]
 dev = [
     "jupyterlab>=4",
     "ipykernel>=6",
@@ -38,6 +46,8 @@ packages = ["src/learningdantic"]
 
 [tool.ruff]
 line-length = 100
+# specs/contract.md holds one-line signature sketches; ruff would spread them over many lines.
+extend-exclude = ["specs"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
@@ -50,4 +60,5 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 # nbmake turns `uv run pytest` into "execute every notebook top-to-bottom".
 # Needs your .env keys locally; CI only executes the keyless list in .github/workflows/ci.yml.
 testpaths = ["notebooks"]
+pythonpath = ["."]  # so tests can `import app`
 addopts = "--nbmake --nbmake-timeout=600"

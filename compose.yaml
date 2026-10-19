@@ -1,0 +1,24 @@
+# Postgres for the Acme Desk app. Start it with `docker compose up -d --wait`.
+name: acme-desk
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      # A demo password for a database that only this computer can reach (see ports).
+      POSTGRES_USER: acme
+      POSTGRES_PASSWORD: acme
+      POSTGRES_DB: acme
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      # -h 127.0.0.1: ready only once the real server listens, not the first-run setup one.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U acme -d acme"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  pgdata:
