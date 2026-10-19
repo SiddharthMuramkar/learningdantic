@@ -1,0 +1,13 @@
+diff --git a/app/routes/approvals.py b/app/routes/approvals.py
+index 9e20940..7610ebf 100644
+--- a/app/routes/approvals.py
++++ b/app/routes/approvals.py
+@@ -43,7 +43,7 @@ async def decide(ticket_id: int, refund_id: int, body: DecisionIn, user: StaffDe
+         # The resumed run needs an answer for every waiting call, so any sibling is rejected too.
+         session.execute(
+             update(Refund)
+-            .where(Refund.ticket_id == ticket_id, Refund.status == "pending")
++            .where(Refund.ticket_id == ticket_id)
+             .values(status="rejected")
+         )
+ 

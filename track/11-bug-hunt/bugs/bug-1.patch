@@ -1,0 +1,18 @@
+diff --git a/app/memory.py b/app/memory.py
+index 3ffdba1..9b9ea15 100644
+--- a/app/memory.py
++++ b/app/memory.py
+@@ -29,7 +29,12 @@ def load(ticket_id: int) -> tuple[Conversation | None, int]:
+ 
+ def save(ticket_id: int, conversation: Conversation, version: int) -> None:
+     """Store the whole conversation. Zero rows changed means VersionConflict."""
+-    stored = ConversationTypeAdapter.dump_python(conversation, mode="json")
++    kept = Conversation(
++        messages=conversation.messages,
++        conversation_id=conversation.conversation_id,
++        deferred_tool_requests=conversation.deferred_tool_requests,
++    )
++    stored = ConversationTypeAdapter.dump_python(kept, mode="json")
+     with Session(engine) as session, session.begin():
+         changed = session.execute(
+             update(Ticket)
