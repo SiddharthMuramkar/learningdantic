@@ -18,7 +18,7 @@ Start Postgres first if it is not running: `docker compose up -d --wait`. The te
 ## Read
 - `app/patterns.py:54`: `code_routing`. Your code asks a small classifier for a label, then `match` picks who answers. The model never chooses the next step.
 - `app/patterns.py:43`: the delegation tool. `usage=ctx.usage` puts the expert's request on the same bill as the front desk's. `usage_limits=ctx.usage_limits` makes the expert obey the same cap.
-- `app/agents.py`: search for `ask_billing`. The real desk delegates to the billing expert the same way.
+- `app/agents.py:78`: `ask_billing`. The real desk delegates to the billing expert the same way.
 
 ## Predict
 - Step 1: how many model requests does `one_agent` make?
