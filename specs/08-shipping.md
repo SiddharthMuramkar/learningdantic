@@ -1,5 +1,5 @@
 # 08 shipping
-Status: todo
+Status: done
 
 ## What and why
 Notebook 14's exercise, for real, as episode 10: you brief the agent. Wave 3, after 04.
@@ -14,11 +14,11 @@ your brief to Claude (template given), then check it against the locked test." I
 Your piece: `ask_shipping` plus `shipping_expert` (both removed in do mode).
 
 ## Done when
-- [ ] test_ep10_shipping.py: a parcel ticket calls ask_shipping, the expert's answer reaches the reply,
+- [x] test_ep10_shipping.py: a parcel ticket calls ask_shipping, the expert's answer reaches the reply,
       result.usage.requests counts the expert, and `await desk_evals.evaluate(answer)` scores 100% keyless
-- [ ] Removing ask_shipping turns the test red (checked, then restored)
-- [ ] track/10-brief-the-agent/EPISODE.md
-- [ ] The Check passes; /code-review and /security-review run, real findings fixed
+- [x] Removing ask_shipping turns the test red (checked, then restored)
+- [x] track/10-brief-the-agent/EPISODE.md
+- [x] The Check passes; /code-review and /security-review run, real findings fixed
 
 ## Touches
 app/agents.py (additions only, below spec 04's code), app/evals.py, app/tests/test_ep10_shipping.py, track/10-brief-the-agent/EPISODE.md
