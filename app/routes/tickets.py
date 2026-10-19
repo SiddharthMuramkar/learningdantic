@@ -1,6 +1,8 @@
 """Ticket and order routes (episode 03)."""
 
-from fastapi import APIRouter, HTTPException
+from typing import Annotated
+
+from fastapi import APIRouter, HTTPException, Path
 
 from app.db import SessionDep
 from app.identity import UserDep
@@ -8,6 +10,9 @@ from app.models import Order, Ticket
 from app.schemas import OrderOut, TicketIn, TicketOut
 
 router = APIRouter()
+
+# Ids are Postgres integers; a bigger number would crash the query (500) instead of answering 422.
+Id = Annotated[int, Path(le=2**31 - 1)]
 
 
 @router.post("/tickets", status_code=201)
@@ -19,7 +24,7 @@ def create_ticket(body: TicketIn, session: SessionDep, user: UserDep) -> TicketO
 
 
 @router.get("/tickets/{ticket_id}")
-def get_ticket(ticket_id: int, session: SessionDep, user: UserDep) -> TicketOut:
+def get_ticket(ticket_id: Id, session: SessionDep, user: UserDep) -> TicketOut:
     ticket = session.get(Ticket, ticket_id)
     # 404, not 403: a customer must not learn that someone else's ticket exists.
     if ticket is None or (user.role != "staff" and ticket.customer != user.name):
@@ -28,7 +33,7 @@ def get_ticket(ticket_id: int, session: SessionDep, user: UserDep) -> TicketOut:
 
 
 @router.get("/orders/{order_id}")
-def get_order(order_id: int, session: SessionDep, user: UserDep) -> OrderOut:
+def get_order(order_id: Id, session: SessionDep, user: UserDep) -> OrderOut:
     order = session.get(Order, order_id)
     if order is None or (user.role != "staff" and order.customer != user.name):
         raise HTTPException(status_code=404, detail="Order not found")

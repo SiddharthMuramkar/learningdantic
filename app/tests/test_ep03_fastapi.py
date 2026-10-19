@@ -47,9 +47,15 @@ def test_ada_reads_her_order_but_not_bos(client):
         "amount_cents": 1200,
     }
     assert client.get("/orders/2077", headers=ADA).status_code == 404
+    assert client.get("/orders/2077", headers=BO).status_code == 200
 
 
 def test_sam_reads_any_order(client):
     assert client.get("/orders/1042", headers=SAM).status_code == 200
     assert client.get("/orders/2077", headers=SAM).status_code == 200
     assert client.get("/orders/9999", headers=SAM).status_code == 404
+
+
+def test_an_id_too_big_for_postgres_is_422_not_500(client):
+    assert client.get("/tickets/99999999999", headers=ADA).status_code == 422
+    assert client.get("/orders/99999999999", headers=ADA).status_code == 422

@@ -39,8 +39,8 @@ You need two terminal tabs. Tab 1 is for setup and `curl`. Tab 2 runs the server
    > ✅ Checkpoint: the first prints the blue mug order. The second prints `{"detail":"Order not found"}`: order 2077 is bo's.
 
 ## Read
-- `app/routes/tickets.py:13`: `create_ticket`. The decorator picks the URL, the method and `201`. `body: TicketIn` is a schema: FastAPI checks it before your code runs, which is why step 5 gives `422` without reaching the function.
-- `app/routes/tickets.py:22`: `get_ticket`. `user: UserDep` runs the login check first. Lines 24-26 answer `404`, not `403`, so a customer cannot tell whether someone else's ticket exists.
+- `app/routes/tickets.py:18`: `create_ticket`. The decorator picks the URL, the method and `201`. `body: TicketIn` is a schema: FastAPI checks it before your code runs, which is why step 5 gives `422` without reaching the function.
+- `app/routes/tickets.py:27`: `get_ticket`. `user: UserDep` runs the login check first. Lines 29-31 answer `404`, not `403`, so a customer cannot tell whether someone else's ticket exists.
 - `app/identity.py:17`: `current_user`. It reads the `X-Demo-User` header and raises `401` for a name it does not know. This is a labelled fake, not real login.
 
 ## Predict
@@ -49,7 +49,7 @@ You need two terminal tabs. Tab 1 is for setup and `curl`. Tab 2 runs the server
 - Step 6, second request: which line of `get_order` makes 2077 vanish for ada but not for sam?
 
 ## Break it
-In `get_ticket` (`app/routes/tickets.py:25`), change the `if` to just `if ticket is None:`. Guess which test goes red and what bo sees in step 5 now, then run:
+In `get_ticket` (`app/routes/tickets.py:30`), change the `if` to just `if ticket is None:`. Guess which test goes red and what bo sees in step 5 now, then run:
 ```bash
 uv run --group app pytest app/tests/test_ep03_fastapi.py
 ```
