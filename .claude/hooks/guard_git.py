@@ -1,4 +1,6 @@
-"""PreToolUse hook for Bash: block force-pushes, pushes to main, and admin/auto merges.
+"""PreToolUse hook for Bash: block force-pushes, pushes to main, and admin merges.
+
+Auto-merge is allowed: the `main: require CI` ruleset makes GitHub wait for green CI first.
 
 Reads the hook JSON on stdin. Exit 2 (with a reason on stderr) blocks the command; any other case,
 including a parsing error in this script, exits 0 so a hook bug never stalls the session.
@@ -46,8 +48,8 @@ def reason(command: str) -> str | None:
                     rest = rest[2:]
                 if rest[:1] == ["push"] and (why := push_problem(rest[1:])):
                     return why
-            if seg[i : i + 3] == ["gh", "pr", "merge"] and {"--admin", "--auto"} & set(seg[i:]):
-                return "admin/auto merge (merge only after CI is green)"
+            if seg[i : i + 3] == ["gh", "pr", "merge"] and "--admin" in seg[i:]:
+                return "admin merge (it skips the required CI checks)"
     return None
 
 
@@ -59,7 +61,6 @@ BLOCKED = [
     "git push origin +feat/x",
     "git -C /tmp/repo push origin main",
     "cd repo && git push origin main",
-    "gh pr merge 3 --auto",
     "gh pr merge 3 --admin --squash",
 ]
 ALLOWED = [
@@ -67,8 +68,9 @@ ALLOWED = [
     "git push -u origin feat/x",
     "git push origin --delete feat/x",
     "gh pr merge 3 --squash",
+    "gh pr merge 3 --auto --squash",
     'echo "git push origin main"',
-    # Known gaps, left on purpose: branch protection on main is the real backstop.
+    # Known gaps, left on purpose: the main ruleset is the real backstop.
     "git push",
     "git --no-pager push origin main",
 ]

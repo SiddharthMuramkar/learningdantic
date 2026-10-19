@@ -45,8 +45,8 @@ notebook spends the learner's key: `MODEL=test uv run pytest …` runs it on a f
 ## Safety
 
 - Never read or print `.env`.
-- The committed hook `.claude/hooks/guard_git.py` blocks force-pushes, pushes to `main` and admin/auto merges.
-  Never edit hooks or settings to get past it; tell the learner. On their own fork, the learner can set
+- The committed hook `.claude/hooks/guard_git.py` blocks force-pushes, pushes to `main` and admin merges.
+  Auto-merge is fine: a ruleset makes `main` wait for green CI. Never edit hooks or settings to get past it; tell the learner. On their own fork, the learner can set
   `{"disableAllHooks": true}` in `.claude/settings.local.json`. That turns off every hook in this project
   (project hooks and their own user hooks, plus a custom status line); managed hooks stay on.
 
