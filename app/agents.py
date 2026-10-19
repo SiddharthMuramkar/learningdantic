@@ -155,3 +155,24 @@ async def run_desk(
 
 
 # --- spec 08 appends below this line ---
+
+shipping_expert = Agent(
+    AGENT_MODEL,
+    name="shipping_expert",
+    instructions=(
+        "You are Acme's shipping expert. Parcels take up to 7 days. After 7 days, Acme sends "
+        "a new parcel for free. Answer in one sentence."
+    ),
+)
+
+
+@desk.instructions
+def shipping_rule() -> str:  # R1, one more line: parcel questions go to shipping
+    return "For a late, lost or missing parcel, ask shipping and pass its answer on."
+
+
+@desk_tools.tool
+async def ask_shipping(ctx: RunContext[Deps], question: str) -> str:
+    """Ask the shipping expert about late, lost or missing parcels."""
+    answer = await shipping_expert.run(question, usage=ctx.usage, usage_limits=ctx.usage_limits)
+    return answer.output

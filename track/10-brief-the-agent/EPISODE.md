@@ -16,9 +16,9 @@ Start Postgres first if it is not running: `docker compose up -d --wait`. You ne
    > ✅ Checkpoint: `1 passed`. The test checked four things: the expert's sentence is in the reply, the run used 3 model requests, the audit log holds `lookup_order` and `ask_shipping`, and the desk was told about shipping.
 
 ## Read
-- `app/agents.py:LINE_EXPERT`: `shipping_expert`. The shipping policy (7 days, then a free new parcel) lives here and nowhere else.
-- `app/agents.py:LINE_TOOL`: `ask_shipping` runs the expert and forwards `usage` and `usage_limits`, so the expert counts toward the desk's six-request budget.
-- `app/evals.py:LINE_CASE`: the `late_parcel` case. It lists the two tools that ticket must use.
+- `app/agents.py:159`: `shipping_expert`. The shipping policy (7 days, then a free new parcel) lives here and nowhere else. The one line that sends parcel questions to it is `shipping_rule` (line 170).
+- `app/agents.py:175`: `ask_shipping` runs the expert and forwards `usage` and `usage_limits`, so the expert counts toward the desk's six-request budget.
+- `app/evals.py:44`: the `late_parcel` case. It lists the two tools that ticket must use.
 
 ## Predict
 - Step 1: how many model requests does the parcel ticket use? (The desk asks its model twice. The expert is asked once.)
@@ -33,7 +33,7 @@ uv run --group app pytest app/tests/test_ep10_shipping.py -k parcel_ticket
 The reply is still right, but the test says `assert 2 == 3`. The expert's request is on nobody's bill, and the six-request limit can no longer stop a stuck expert. Undo with `git restore .`.
 
 ## Your piece
-This time you do not write the function. You write the **brief**. On a play branch, `/episode 10 do` removes `shipping_expert`, `ask_shipping` and the one rule line from `app/agents.py`. You write a brief, give it to Claude, and check what Claude builds with the locked test:
+This time you do not write the function. You write the **brief**. On a play branch, `/episode 10 do` removes `shipping_expert`, `shipping_rule` and `ask_shipping` from `app/agents.py`. You write a brief, give it to Claude, and check what Claude builds with the locked test:
 ```bash
 uv run --group app pytest app/tests/test_ep10_shipping.py
 ```
