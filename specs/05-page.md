@@ -14,10 +14,10 @@ Your piece: `sendMessage` in app.js (its red/green check arrives with spec 09's 
 check it by hand in the browser).
 
 ## Done when
-- [ ] test_ep05_page.py: GET / returns the page with every contract id and loads app.js and approvals.js
+- [x] test_ep05_page.py: GET / returns the page with every contract id and loads app.js and approvals.js
 - [ ] By hand with the app running: ada creates a ticket, sends a message, sees the reply (keyless TestModel)
-- [ ] track/05-page/EPISODE.md in the contract format
-- [ ] The Check passes; /code-review and /security-review run, real findings fixed
+- [x] track/05-page/EPISODE.md in the contract format
+- [x] The Check passes; /code-review and /security-review run, real findings fixed
 
 ## Touches
 app/static/index.html, app/static/app.js, app/tests/test_ep05_page.py, track/05-page/EPISODE.md

@@ -18,15 +18,18 @@ TABLES = {"orders", "tickets", "audit_log", "refunds"}
 @pytest.fixture
 def scratch():
     """An empty throwaway database, so the real acme_test is left alone."""
+    name = (
+        engine.url.database.removesuffix("_test") + "_scratch"
+    )  # one per checkout, like the test db
     admin = create_engine(engine.url.set(database="postgres"), isolation_level="AUTOCOMMIT")
     with admin.connect() as conn:
-        conn.execute(text("DROP DATABASE IF EXISTS acme_scratch WITH (FORCE)"))
-        conn.execute(text("CREATE DATABASE acme_scratch"))
-    scratch = create_engine(engine.url.set(database="acme_scratch"))
+        conn.execute(text(f"DROP DATABASE IF EXISTS {name} WITH (FORCE)"))
+        conn.execute(text(f"CREATE DATABASE {name}"))
+    scratch = create_engine(engine.url.set(database=name))
     yield scratch
     scratch.dispose()
     with admin.connect() as conn:
-        conn.execute(text("DROP DATABASE acme_scratch WITH (FORCE)"))
+        conn.execute(text(f"DROP DATABASE {name} WITH (FORCE)"))
     admin.dispose()
 
 

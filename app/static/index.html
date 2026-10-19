@@ -1,30 +1,34 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Acme Desk</title>
-  </head>
-  <body>
-    <!-- Stub: spec 05 builds this page. The ids are fixed by specs/contract.md. -->
-    <h1>Acme Desk</h1>
-    <label>User
-      <select id="user">
-        <option>ada</option>
-        <option>bo</option>
-        <option>sam</option>
-      </select>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acme Desk</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; }
+    #log > div { margin: 0.5rem 0; padding: 0.5rem 0.75rem; border-radius: 0.5rem; background: #f0f0f0; }
+    #log [data-testid=user-message] { background: #dbeafe; margin-left: 3rem; }
+    #log [data-testid=error-message] { background: #fee2e2; }
+  </style>
+</head>
+<body>
+  <h1>Acme Desk</h1>
+  <p>
+    <label>Signed in as
+      <select id="user"><option>ada</option><option>bo</option><option>sam</option></select>
     </label>
-    <p>
-      <input id="subject" placeholder="Subject" />
-      <button id="new-ticket">New ticket</button>
-    </p>
-    <p>
-      <input id="message" placeholder="Message" />
-      <button id="send">Send</button>
-    </p>
-    <div id="log"></div>
-    <script src="approvals.js"></script>
-    <script src="app.js"></script>
-  </body>
+    <small>(a demo login, not real security)</small>
+  </p>
+  <p>
+    <label>Subject <input id="subject" maxlength="200"></label>
+    <button id="new-ticket">New ticket</button>
+  </p>
+  <div id="log" aria-live="polite"></div>
+  <p>
+    <label>Message <input id="message" maxlength="2000"></label>
+    <button id="send">Send</button>
+  </p>
+  <script src="approvals.js"></script>
+  <script src="app.js"></script>
+</body>
 </html>
