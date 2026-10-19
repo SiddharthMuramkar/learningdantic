@@ -35,7 +35,7 @@ PR: opened from branch `04-agent` (title "04 agent"). Built from `specs-base`, t
 | Live check: one chat on the real `MODEL` (`has_key` was true), ada, order 1042, my own test DB | valid `Reply` (billing), `requests: 4`, `cost: 0.004144` (not None), audit `['lookup_order', 'ask_billing']`, conversation saved at version 1 |
 | `/code-review` (high) | 5 findings: fixed the unhandled `UsageLimitExceeded` (now 429) and the untyped hook; skipped 3 (below) |
 | `/security-review` | no high-confidence findings |
-| Final `git merge origin/main`, ruff, format, Check | see the last line of this table once run |
+| Final `git merge origin/main` (02 and 05 now in), `uv sync --group app`, ruff check, ruff format --check, `check_notebooks.py`, `uv run --group app pytest app/tests` | all pass; 17 passed (5 from 01, 10 mine, 2 from 05) |
 
 ## What failed or went wrong
 - First R6 test did not discriminate (see table); fixed.
