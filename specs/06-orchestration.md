@@ -1,5 +1,5 @@
 # 06 orchestration
-Status: done
+Status: todo
 
 ## What and why
 The lesson Siddharth asked for most, episode 07: who holds the wheel. Wave 3, after 04.
@@ -22,7 +22,7 @@ Your piece: `code_routing`.
       asserts each one's request count and that code_routing makes fewer requests than delegation
 - [x] Blanking `code_routing` turns the test red (checked, then restored)
 - [x] track/07-orchestration/EPISODE.md in the contract format, Predict = guess the three request counts
-- [x] The Check passes; /code-review and /security-review run, real findings fixed
+- [ ] The Check passes; /code-review and /security-review run, real findings fixed
 
 ## Touches
 app/patterns.py, app/tests/test_ep07_orchestration.py, track/07-orchestration/EPISODE.md
