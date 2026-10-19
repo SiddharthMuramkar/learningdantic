@@ -1,5 +1,5 @@
 # 03 api
-Status: todo
+Status: done
 
 ## What and why
 The first FastAPI routes, teaching episode 03. Wave 2, after 01.
@@ -11,11 +11,11 @@ and `/docs` (try a request there). Second terminal: `uv run --group app fastapi 
 Your piece: `get_order` in app/routes/tickets.py.
 
 ## Done when
-- [ ] app/tests/test_ep03_fastapi.py passes: create a ticket as ada (201), read it back, bo gets 404 for it,
+- [x] app/tests/test_ep03_fastapi.py passes: create a ticket as ada (201), read it back, bo gets 404 for it,
       sam gets 200, no header gets 401, an empty subject gets 422, ada reads order 1042 and gets 404 for 2077
-- [ ] Blanking `get_order` turns test_ep03 red (checked, then restored)
-- [ ] track/03-fastapi/EPISODE.md in the contract format
-- [ ] The Check passes; /code-review and /security-review run, real findings fixed
+- [x] Blanking `get_order` turns test_ep03 red (checked, then restored)
+- [x] track/03-fastapi/EPISODE.md in the contract format
+- [x] The Check passes; /code-review and /security-review run, real findings fixed
 
 ## Touches
 app/routes/tickets.py, app/tests/test_ep03_fastapi.py, track/03-fastapi/EPISODE.md
