@@ -4,11 +4,12 @@
 `expect(...)` waits and retries until the page matches, so these tests never sleep.
 """
 
-from app.db import engine
-from app.models import Refund
 from playwright.sync_api import Page, expect
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+
+from app.db import engine
+from app.models import Refund
 
 
 def new_ticket(page: Page, app_url: str, user: str) -> None:

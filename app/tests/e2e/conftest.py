@@ -12,13 +12,21 @@ from pathlib import Path
 
 import httpx
 import pytest
+from playwright.sync_api import Page, expect
+
 from app.db import engine
-from playwright.sync_api import expect
 
 REPO_ROOT = Path(__file__).parents[3]
 
 # Every expect(...) waits up to 10 s for the page to catch up and stops the moment it matches.
-expect.set_options(timeout=10_000)
+TIMEOUT_MS = 10_000
+expect.set_options(timeout=TIMEOUT_MS)
+
+
+@pytest.fixture(autouse=True)
+def short_waits(page: Page):
+    """Clicks and expect_response wait 10 s too (the default is 30): a wrong locator fails fast."""
+    page.set_default_timeout(TIMEOUT_MS)
 
 
 def free_port() -> int:
