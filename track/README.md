@@ -160,7 +160,7 @@ uv run --group app alembic upgrade head      # builds the tables again
 | `Bind for 127.0.0.1:5432 failed: port is already allocated` | another Postgres already uses port 5432 | `docker ps` to find it, stop that one, start again |
 | `psycopg.OperationalError: … Connection refused` | the database is not up | `docker compose up -d --wait` |
 | `ModuleNotFoundError: No module named 'fastapi'` | the `app` group is missing | `uv sync --group app` |
-| `[Errno 48] Address already in use` | an old app still runs on port 8000 | find its tab and press Ctrl+C |
+| `[Errno 48] Address already in use` | something already uses port 8000: an old app in another tab, or another Docker project | press Ctrl+C in that tab, or add `--port 8001` to the command and open that address instead |
 
 ## The episodes
 
