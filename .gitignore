@@ -37,3 +37,7 @@ data/
 .DS_Store
 .idea/
 .vscode/
+
+# --- Acme Desk: Playwright (spec 09) writes traces and reports here ---
+test-results/
+playwright-report/
