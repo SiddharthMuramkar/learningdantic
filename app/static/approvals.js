@@ -27,6 +27,7 @@ window.showApproval = (ticketId, approval) => {
       const reply = await response.json().catch(() => ({}));
       addLine("assistant-message", response.ok ? reply.message : `Error ${response.status}`);
       if (!response.ok) buttons.forEach((b) => (b.disabled = false));
+      if (reply.approval) window.showApproval(ticketId, reply.approval); // the desk asked again
     };
     card.append(button);
   }
