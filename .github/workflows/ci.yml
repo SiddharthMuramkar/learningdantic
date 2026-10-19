@@ -96,3 +96,37 @@ jobs:
           notebooks/06_logfire_observability.ipynb
           notebooks/07_history_and_streaming.ipynb
           notebooks/11_multi_agent.ipynb
+
+  # The Acme Desk app (app/): real Postgres, the fake model, no API keys.
+  fullstack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      MODEL: test
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: acme
+          POSTGRES_PASSWORD: acme
+          POSTGRES_DB: acme
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -h 127.0.0.1 -U acme -d acme"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Sync dependencies, including the app group
+        run: uv sync --locked --group app
+
+      - name: App tests
+        run: uv run pytest app/tests --ignore=app/tests/e2e
