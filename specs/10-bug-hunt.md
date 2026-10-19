@@ -15,7 +15,7 @@ note: don't open bugs/ first. Answers in a collapsed section at the end.
 
 ## Done when
 - [ ] Each patch applies cleanly to main and turns exactly the named test red; reverting makes it green (checked)
-- [ ] track/11-bug-hunt/EPISODE.md exists
+- [x] track/11-bug-hunt/EPISODE.md exists
 - [ ] The Check passes on main (patches are never applied there); Markdown and patches only, so no code reviews
 
 ## Touches
