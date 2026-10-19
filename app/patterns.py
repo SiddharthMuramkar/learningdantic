@@ -54,13 +54,13 @@ async def one_agent(text: str) -> tuple[str, int]:
 async def code_routing(text: str) -> tuple[str, int]:
     """Your code holds the wheel: a classifier labels the question, `match` picks who answers."""
     bill = RunUsage()  # one bill for both runs
-    BILLS["code_routing"] = bill
     kind = (await classifier.run(text, usage=bill, usage_limits=BUDGET)).output
     match kind:
         case "billing":
             answer = (await billing_expert.run(text, usage=bill, usage_limits=BUDGET)).output
         case _:
             answer = "Passed to a human."
+    BILLS["code_routing"] = bill
     return answer, bill.requests
 
 
