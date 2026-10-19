@@ -23,6 +23,16 @@ TIMEOUT_MS = 10_000
 expect.set_options(timeout=TIMEOUT_MS)
 
 
+def pytest_collection_modifyitems(items):
+    """In `pytest app/tests`, run the browser tests last.
+
+    Once Playwright's sync API has started, it marks its event loop as running until the run ends,
+    so an `async def` test after it fails with
+    "Cannot run the event loop while another loop is running".
+    """
+    items.sort(key=lambda item: item.path.is_relative_to(Path(__file__).parent))
+
+
 @pytest.fixture(autouse=True)
 def short_waits(page: Page):
     """Clicks and expect_response wait 10 s too (the default is 30): a wrong locator fails fast."""
