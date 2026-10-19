@@ -1,6 +1,6 @@
 # Review: 06 orchestration
 
-PR: branch `06-orchestration` (title "06 orchestration"). Built from `specs-base`. I wrote it before 01 landed and proved it on a stand-in package. Then I merged `origin/main` after 01, again after 04, and once more after 03, 07, 08 and 09.
+PR: branch `06-orchestration` (title "06 orchestration"). Built from `specs-base`. I wrote it before 01 landed and proved it on a stand-in package. Then I merged `origin/main` after 01, after 04, after 03, 07, 08 and 09, and last after 11 ("change e2e runs last", #17).
 
 ## What I built
 - `app/patterns.py`: one billing question (`QUESTION`), three ways to answer it. Each returns `(answer, model requests)`.
@@ -20,7 +20,7 @@ PR: branch `06-orchestration` (title "06 orchestration"). Built from `specs-base
   - `uv run python scripts/check_notebooks.py`: 29 notebooks, 0 problems.
   - `uv run --group app pytest app/tests/test_ep07_orchestration.py`: 2 passed.
   - `uv run --group app pytest app/tests --ignore=app/tests/e2e` (the CI command): 35 passed.
-  - `uv run --group app pytest app/tests` (the SPEC.md Check, e2e included): **5 failed, 34 passed** (see below).
+  - `uv run --group app pytest app/tests` (the SPEC.md Check, e2e included): **5 failed, 34 passed** before #17 (see below). After merging #17: **39 passed**, and ruff, format and check_notebooks are clean.
   - Blank `code_routing`: 2 failed with `NotImplementedError: your piece`. Restored: 2 passed.
   - Break it (delete `usage=ctx.usage, `): `delegation': 2` vs `3`, as the episode says. Restored.
   - `uv run --group app python -m app.patterns`: a key was set in this checkout's environment (`.env` was never opened), so the run was live. Counts 1, 2, 3. Cost: one_agent 43 tokens in, 201 out, $0.002096; code_routing 164 in, 58 out, $0.000908; delegation 378 in, 161 out, $0.002366. About half a cent in total.
@@ -28,7 +28,8 @@ PR: branch `06-orchestration` (title "06 orchestration"). Built from `specs-base
 - `/security-review`: no findings.
 
 ## What failed or went wrong
-- **The full Check is red, and not in my files.** With `app/tests/e2e` collected first, `test_ep07_orchestration.py` (2 tests) and `test_ep10_shipping.py` (3 tests) fail with `RuntimeError: Runner.run() cannot be called from a running event loop`. `pytest app/tests/e2e app/tests/test_ep07_orchestration.py` gives 2 failed. The reverse order gives 6 passed. Playwright's sync API (09's e2e fixtures) leaves an event loop running for the rest of the pytest session. CI is green because its app job uses `--ignore=app/tests/e2e`. A fix belongs in 09's e2e setup or in the Check (run e2e in its own `pytest` call). I left `Status: todo` and the Check line unticked for this reason.
+- **The full Check is red, and not in my files.** With `app/tests/e2e` collected first, `test_ep07_orchestration.py` (2 tests) and `test_ep10_shipping.py` (3 tests) fail with `RuntimeError: Runner.run() cannot be called from a running event loop`. `pytest app/tests/e2e app/tests/test_ep07_orchestration.py` gives 2 failed. The reverse order gives 6 passed. Playwright's sync API (09's e2e fixtures) leaves an event loop running for the rest of the pytest session. CI is green because its app job uses `--ignore=app/tests/e2e`. Spec 11 (#17, "change e2e runs last") fixed it on main. After merging it, the full Check passes (39 passed), so the Check line is ticked and `Status: done`.
+- `gh pr create` failed for a while because this Mac's DNS server stopped answering for `api.github.com`. The push to `github.com` still worked.
 - My first background wait loop detached, because it had an `&` inside a background command. I restarted it properly.
 
 ## Never ran or not verified
