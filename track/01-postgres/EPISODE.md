@@ -22,14 +22,14 @@ Open Docker Desktop and wait until it says it is running. Then, in the repo fold
    \q
    ```
    > ✅ Checkpoint: `\dt` says `Did not find any tables.` After `select 1 + 1` the prompt changes to `acme-#`: it is waiting for more. The `;` makes it answer `2`. `\q` takes you back to your shell.
-4. Run the episode's test. It makes a second database, `acme_test`, builds the tables and adds the demo orders.
+4. Run the episode's test. It makes a second database just for tests, builds the tables and adds the demo orders. Normally it deletes that database when it finishes. `ACME_KEEP_TEST_DB=1` keeps it, so you can look inside.
    ```bash
-   uv run --group app pytest app/tests/test_ep01_postgres.py
+   ACME_KEEP_TEST_DB=1 uv run --group app pytest app/tests/test_ep01_postgres.py
    ```
-   > ✅ Checkpoint: `3 passed`.
-5. Look inside that database.
+   > ✅ Checkpoint: near the top, a line like `test database: acme_1a2b3c4d_test`. That is your test database, called `<test-db>` below. At the end, `3 passed`.
+5. Look inside it, with your own `<test-db>` name.
    ```bash
-   docker compose exec db psql -U acme acme_test
+   docker compose exec db psql -U acme <test-db>
    ```
    Then type `\dt`, then `select * from orders;`, then `\q`.
    > ✅ Checkpoint: five tables, and two orders: 1042 for ada (1 blue mug) and 2077 for bo (2 white mugs).
@@ -41,7 +41,7 @@ Open Docker Desktop and wait until it says it is running. Then, in the repo fold
    docker compose up -d --wait
    ```
    ```bash
-   docker compose exec db psql -U acme acme_test -c "select count(*) from orders;"
+   docker compose exec db psql -U acme <test-db> -c "select count(*) from orders;"
    ```
    > ✅ Checkpoint: the count is `2`. The data lives in a volume called `pgdata`, outside the container.
 7. Now stop it and delete the volume too, start again, and ask the same question.
@@ -52,9 +52,9 @@ Open Docker Desktop and wait until it says it is running. Then, in the repo fold
    docker compose up -d --wait
    ```
    ```bash
-   docker compose exec db psql -U acme acme_test -c "select count(*) from orders;"
+   docker compose exec db psql -U acme <test-db> -c "select count(*) from orders;"
    ```
-   > ✅ Checkpoint: an error that ends in `database "acme_test" does not exist`. Run step 4 to bring it back.
+   > ✅ Checkpoint: an error that ends in `database "<test-db>" does not exist`. Run step 4 to bring it back.
 
 ## Read
 - `compose.yaml:15`: the `pgdata` volume. This one line is why step 6 keeps your data and step 7 does not.
@@ -63,7 +63,7 @@ Open Docker Desktop and wait until it says it is running. Then, in the repo fold
 
 ## Predict
 - Step 3: after you type `select 1 + 1` and press Enter, what does the prompt do?
-- Step 6: is `acme_test` still there after `docker compose down`?
+- Step 6: is your test database still there after `docker compose down`?
 - Step 7: and after `docker compose down -v`?
 
 ## Break it
