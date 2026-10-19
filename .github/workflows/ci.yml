@@ -130,3 +130,17 @@ jobs:
 
       - name: App tests
         run: uv run pytest app/tests --ignore=app/tests/e2e
+
+      - name: Install Chromium for the browser tests
+        run: uv run --group app playwright install --with-deps chromium
+
+      - name: Browser tests (Playwright)
+        run: uv run --group app pytest app/tests/e2e --tracing retain-on-failure
+
+      - name: Keep the traces of failed browser tests
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-traces
+          path: test-results/
+          if-no-files-found: ignore
