@@ -1,5 +1,5 @@
 # 09 playwright
-Status: todo
+Status: done
 
 ## What and why
 A real browser proves the approval rule, teaching episode 09. Wave 4, after 07.
@@ -20,10 +20,10 @@ break it = rename the Approve button, read the red trace, fix the locator.
 Your piece: the Reject test body.
 
 ## Done when
-- [ ] The four e2e tests pass locally and in CI
+- [x] The four e2e tests pass locally and in CI
 - [x] Blanking the Reject test (`raise NotImplementedError`) turns it red (checked, then restored)
 - [x] track/09-playwright/EPISODE.md in the contract format
-- [ ] The Check passes; /code-review and /security-review run, real findings fixed
+- [x] The Check passes; /code-review and /security-review run, real findings fixed
 
 ## Touches
 app/tests/e2e/, .github/workflows/ci.yml (fullstack job only), track/09-playwright/EPISODE.md
