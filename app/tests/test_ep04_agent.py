@@ -1,7 +1,5 @@
 """Episode 04: the agent joins. A ticket remembers its chat, and the desk keeps its rules."""
 
-import pytest
-from pydantic_ai import UsageLimitExceeded
 from pydantic_ai.messages import ModelResponse, ToolCallPart, ToolReturnPart, UserPromptPart
 from pydantic_ai.models.function import FunctionModel
 from pydantic_ai.models.test import TestModel
@@ -150,6 +148,7 @@ def test_a_stuck_desk_is_stopped_by_the_turn_limit(client, session):
         desk_requests.append(1)
         return ModelResponse(parts=[ToolCallPart("ask_billing", {"question": "Refund?"})])
 
-    with desk.override(model=FunctionModel(stuck)), pytest.raises(UsageLimitExceeded):
-        say(client, ticket_id, "Refund?")
+    with desk.override(model=FunctionModel(stuck)):
+        response = say(client, ticket_id, "Refund?")
+    assert response.status_code == 429
     assert len(desk_requests) == 3  # 3 desk + 3 billing requests use up the 6 (50 would allow 25)

@@ -19,6 +19,8 @@ from pydantic_ai import (
     UsageLimits,
 )
 from pydantic_ai.capabilities import Hooks
+from pydantic_ai.messages import ToolCallPart
+from pydantic_ai.tools import ToolDefinition
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -100,7 +102,7 @@ audit = Hooks()
 
 
 @audit.on.before_tool_execute  # R4
-def log_call(ctx, call, tool_def, args):
+def log_call(ctx: RunContext[Deps], call: ToolCallPart, tool_def: ToolDefinition, args: dict):
     with Session(engine) as session, session.begin():
         session.add(AuditLog(ticket_id=ctx.deps.ticket_id, tool=call.tool_name))
     return args
