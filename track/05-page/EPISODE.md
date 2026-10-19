@@ -13,7 +13,7 @@ Use two terminal tabs: one for the server, one for everything else.
    ```bash
    docker compose up -d --wait
    ```
-   > ✅ Checkpoint: the last line says `healthy`.
+   > ✅ Checkpoint: the last line says `Container acme-desk-db-1 Healthy`.
 2. Start the server (tab 1). Leave it running.
    ```bash
    uv run --group app fastapi dev app/main.py
