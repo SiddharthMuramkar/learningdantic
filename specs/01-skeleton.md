@@ -1,5 +1,5 @@
 # 01 skeleton
-Status: todo
+Status: done
 
 ## What and why
 The base every other spec builds on, alone in wave 1. Everything in specs/contract.md marked "real" works;
@@ -16,13 +16,13 @@ section from the approved plan (app/__init__.py is where setup() runs). README.m
 Your piece: ep01 = `seed()` in app/seed.py; ep02 = `upgrade()` in the initial migration.
 
 ## Done when
-- [ ] The Check passes with Postgres up; `docker compose up -d --wait` works on a fresh volume
-- [ ] `uv run --group app uvicorn app.main:app` starts; `/health` answers; stub routes answer 501
-- [ ] app/tests/test_ep01_postgres.py and test_ep02_alembic.py pass (02: upgrade, downgrade base, upgrade head on a scratch DB)
-- [ ] Blanking `seed()` turns test_ep01 red, blanking `upgrade()` turns test_ep02 red (checked, then restored)
-- [ ] track/01-postgres/EPISODE.md (docker compose, `docker compose exec db psql -U acme acme`, `\dt`, `;`, `\q`, down vs down -v)
-- [ ] track/02-alembic/EPISODE.md (read the migration, upgrade/downgrade/history/current, autogenerate a change and discard it)
-- [ ] The existing keyless notebook list still passes after `uv lock` (starlette may move)
+- [x] The Check passes with Postgres up; `docker compose up -d --wait` works on a fresh volume
+- [x] `uv run --group app uvicorn app.main:app` starts; `/health` answers; stub routes answer 501
+- [x] app/tests/test_ep01_postgres.py and test_ep02_alembic.py pass (02: upgrade, downgrade base, upgrade head on a scratch DB)
+- [x] Blanking `seed()` turns test_ep01 red, blanking `upgrade()` turns test_ep02 red (checked, then restored)
+- [x] track/01-postgres/EPISODE.md (docker compose, `docker compose exec db psql -U acme acme`, `\dt`, `;`, `\q`, down vs down -v)
+- [x] track/02-alembic/EPISODE.md (read the migration, upgrade/downgrade/history/current, autogenerate a change and discard it)
+- [x] The existing keyless notebook list still passes after `uv lock` (starlette may move)
 
 ## Touches
 Everything in contract.md marked 01, plus AGENTS.md, README.md, SPEC.md, specs/, the guard hook (already changed on this branch).
