@@ -24,9 +24,9 @@ Docker Desktop must be running. Then, in the repo folder:
    uv run --group app pytest app/tests/e2e --headed --slowmo 300
    ```
    > ✅ Checkpoint: a Chromium window opens by itself. You see a ticket appear, a message typed, an approval card with two buttons, and a click. Then `4 passed`.
-5. Record a trace of the approve test. A trace is a recording you can scrub through afterwards.
+5. Record a trace of the approve test. A trace is a recording you can scrub through afterwards. `ACME_KEEP_TEST_DB=1` keeps the test database, so step 6 can look inside it.
    ```bash
-   uv run --group app pytest app/tests/e2e -k approves --tracing on
+   ACME_KEEP_TEST_DB=1 uv run --group app pytest app/tests/e2e -k approves --tracing on
    ls test-results
    ```
    Copy the folder name `ls` prints, then open its recording:
@@ -34,9 +34,9 @@ Docker Desktop must be running. Then, in the repo folder:
    uv run --group app playwright show-trace test-results/<that-folder>/trace.zip
    ```
    > ✅ Checkpoint: the Trace Viewer opens. The left list holds every step. Click the step that clicks "Approve": the page before and after is on screen, and the Network tab shows a `POST` to `/approvals/...`.
-6. The test also reads the database. See what it saw (the run in step 5 left the rows there).
+6. The test also reads the database. See what it saw. Use the `test database:` name from the top of step 5's output (it looks like `acme_1a2b3c4d_test`).
    ```bash
-   docker compose exec db psql -U acme acme_test -c "select id, order_id, amount_cents, status from refunds;"
+   docker compose exec db psql -U acme <test-db> -c "select id, order_id, amount_cents, status from refunds;"
    ```
    > ✅ Checkpoint: one row for order 1042, status `executed`.
 
