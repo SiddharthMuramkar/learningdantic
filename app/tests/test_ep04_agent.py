@@ -144,9 +144,12 @@ def test_a_refund_promise_is_sent_back_once(client, session):
 
 def test_a_stuck_desk_is_stopped_by_the_turn_limit(client, session):
     ticket_id = new_ticket(session)
+    desk_requests = []
 
     def stuck(messages, info):
+        desk_requests.append(1)
         return ModelResponse(parts=[ToolCallPart("ask_billing", {"question": "Refund?"})])
 
     with desk.override(model=FunctionModel(stuck)), pytest.raises(UsageLimitExceeded):
         say(client, ticket_id, "Refund?")
+    assert len(desk_requests) == 3  # 3 desk + 3 billing requests use up the 6 (50 would allow 25)
