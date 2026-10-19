@@ -115,6 +115,12 @@ notebook in [`solutions/`](solutions/). Every solution ends in `assert`s, so you
 | 13 | [Ship it](notebooks/13_ship_it.ipynb) | Scope | Put an agent behind a chat UI and control what it remembers in a database |
 | 14 | [Capstone: support desk](notebooks/14_capstone_support_desk.ipynb) | Both | Design an agent by deciding which knob each rule belongs to, then prove it |
 
+## Then build a real app
+
+After the notebooks, [`track/`](track/) is a second course: a small support-desk web app (Postgres, Alembic,
+FastAPI, an agent that waits for a person to approve a refund, Logfire, Playwright) that coding agents built.
+You read it, run it, and redo one piece in each episode. You need Docker Desktop, then `uv sync --group app`.
+
 ## Coming from an old tutorial?
 
 Pydantic AI hit **v1 in September 2025** and **v2 in June 2026**, and most blog posts and videos predate that.
