@@ -38,6 +38,7 @@ PR: branch `09-playwright` (built from `specs-base`, then merged with `origin/ma
 | `gh pr checks 11` on the first push (03 missing) | `ci` pass; `fullstack` fail with the 501 above; this proved the Chromium install, server start and test steps run on GitHub |
 
 ## What failed or never ran
+- **PR #11 merged early.** Only `ci` is required, so auto-merge landed it (04:57 UTC) while `fullstack` was red and `Status` was `todo`. This follow-up PR only ticks the spec and updates this note; the code is unchanged and the four e2e tests pass on main + this branch.
 - The first push was red in `fullstack` (501, 03 not on main yet). It is fixed by the merge above; the post-merge `fullstack` run is pending at the time of writing.
 - The upload-traces step has not run on GitHub (it only runs on failure and the first failure had no trace files worth checking).
 - `playwright show-trace` was not opened (GUI).
