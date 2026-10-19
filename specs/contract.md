@@ -110,8 +110,8 @@ named "Approve" and "Reject". Every string goes in with `textContent`.
 ## Tests (01's conftest, used by everyone)
 
 `MODEL=test` and `pydantic_ai.models.ALLOW_MODEL_REQUESTS = False` are set before `app` is imported.
-`DATABASE_URL` points at `acme_test`, which is dropped, created and migrated (`alembic upgrade head`) once per
-session. Before each test: assert the database name ends in `_test`, `TRUNCATE ... RESTART IDENTITY CASCADE`,
+`DATABASE_URL` points at the checkout's own test database, `acme_<8 hex of sha1(repo path)>_test`, which is dropped,
+created and migrated (`alembic upgrade head`) once per session and dropped again at the end (`ACME_KEEP_TEST_DB=1` keeps it). Before each test: assert the database name ends in `_test`, `TRUNCATE ... RESTART IDENTITY CASCADE`,
 then `seed()`. Fixtures: `client` (one session-scoped `TestClient(app)` used as a context manager) and
 `session` (a SQLAlchemy Session on acme_test). Requests send `headers={"X-Demo-User": "ada"}`.
 
