@@ -3,6 +3,9 @@
 A beginner course in Jupyter notebooks on Pydantic AI 2.57 and Logfire 5.2. The learner owns the design, you
 write the code, and a `# 🔍 Verify` cell checks it.
 
+The rules below apply to `notebooks/` and `solutions/`, except **Safety**, which applies everywhere. The
+Acme Desk app (`app/`, `migrations/`, `track/`) has its own rules in **Full-stack track** at the end.
+
 ## Before you write code
 
 - Look up every `pydantic_ai`, `pydantic_evals` and `logfire` API you use in Context7 (`/pydantic/pydantic-ai`,
@@ -51,3 +54,26 @@ notebook spends the learner's key: `MODEL=test uv run pytest …` runs it on a f
   (project hooks and their own user hooks, plus a custom status line); managed hooks stay on.
 
 Course authors also follow [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Full-stack track (`app/`, `migrations/`, `track/`)
+
+Acme Desk: Postgres 18 in Docker, Alembic, sync SQLAlchemy 2 + psycopg 3, FastAPI, a Pydantic AI desk agent
+with human approval, Logfire, Playwright. The plan is `SPEC.md` and `specs/`; `specs/contract.md` fixes the
+shared signatures, file owners and the episode format.
+
+- Do one spec and touch only the files it lists. Never change a signature in `contract.md`; if one must
+  change, stop and say so. The v2 rules above still apply to every Pydantic AI line you write here.
+- Look up each FastAPI, SQLAlchemy, Alembic, psycopg, Logfire, Pydantic AI and Playwright API in Context7, then
+  confirm the installed signature: `uv run --group app python -c "import inspect, X; print(inspect.signature(X.f))"`.
+- `app/__init__.py` is where `setup()` runs, once. Never call `logfire.configure()` yourself.
+  Agents run on `AGENT_MODEL`, which is `"test"` without a key. No test makes a live model call.
+- Routes that touch the database are plain `def` and take `SessionDep`. A route that runs an agent is
+  `async def` and never holds a database session across an `await`. SQL uses bound parameters, never an f-string.
+- A schema change is a new Alembic revision (`uv run --group app alembic revision --autogenerate -m "..."`).
+  Read it before you run it. Never edit a revision that is already on `main`.
+- `X-Demo-User` is a labelled fake login. A customer asking for another customer's row gets 404, not 403.
+  Page code sets text with `textContent`, never `innerHTML`.
+- Start Postgres with `docker compose up -d --wait`, then `uv run --group app pytest app/tests`. The tests use a
+  throwaway `acme_test` database (sessions sharing one Postgres set `ACME_TEST_DB=acme_NN_test`); never point one at `acme`. Never edit a `test_epNN_*.py` that another spec
+  owns. Use `uv sync --group app`: a bare `uv sync` removes the app packages.
+- The Check is the one line in `SPEC.md`. Run it before you commit.
