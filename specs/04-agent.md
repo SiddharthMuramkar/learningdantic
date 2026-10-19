@@ -1,5 +1,5 @@
 # 04 agent
-Status: todo
+Status: done
 
 ## What and why
 Notebook 14's desk moves into the app, teaching episode 04 (the agent joins) and 06 (Logfire). Wave 2, after 01.
@@ -16,13 +16,13 @@ Live check: one short chat on the real MODEL only if `has_key(MODEL)`; report `r
 Your pieces: ep04 = `memory.save`; ep06 = the `logfire.instrument_sqlalchemy` call (span test goes red).
 
 ## Done when
-- [ ] test_ep04_agent.py: two messages on one ticket, the second run sees the first (FunctionModel echo);
+- [x] test_ep04_agent.py: two messages on one ticket, the second run sees the first (FunctionModel echo);
       usage carries over; a stale version gives 409; ada never sees issue_refund offered, sam does
-- [ ] test_ep06_logfire.py (capfire): one chat request has spans invoke_agent, chat, execute_tool and a SQL span
-- [ ] Blanking each piece turns its test red (checked, then restored)
-- [ ] track/04-agent-joins/EPISODE.md and track/06-logfire/EPISODE.md (06 also: what setup() does, optional
+- [x] test_ep06_logfire.py (capfire): one chat request has spans invoke_agent, chat, execute_tool and a SQL span
+- [x] Blanking each piece turns its test red (checked, then restored)
+- [x] track/04-agent-joins/EPISODE.md and track/06-logfire/EPISODE.md (06 also: what setup() does, optional
       Live view with your own Logfire login, `include_content=False` before real users)
-- [ ] The Check passes; /code-review and /security-review run, real findings fixed
+- [x] The Check passes; /code-review and /security-review run, real findings fixed
 
 ## Touches
 app/agents.py, app/memory.py, app/routes/chat.py, app/tests/test_ep04_agent.py, test_ep06_logfire.py, two EPISODE.md
