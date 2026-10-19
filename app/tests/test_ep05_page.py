@@ -28,9 +28,9 @@ def test_page_has_every_contract_id_and_loads_both_scripts(client):
     assert page.ids >= IDS
     for name in ("ada", "bo", "sam"):
         assert f">{name}</option>" in response.text
-    assert set(page.scripts) >= {"/static/app.js", "/static/approvals.js"}
+    assert set(page.scripts) >= {"app.js", "approvals.js"}
     for src in page.scripts:  # a script tag that points nowhere would pass the lines above
-        assert client.get(src).status_code == 200, src
+        assert client.get(f"/{src}").status_code == 200, src
 
 
 def test_app_js_puts_text_in_with_textcontent_only():
