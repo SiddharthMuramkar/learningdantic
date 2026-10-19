@@ -16,8 +16,10 @@ see "Never ran".
 
 ## Commands I ran, and what they printed
 
-Run on the merged branch (01 is on main as `ddfbfae`, PR 6). `ACME_TEST_DB=acme_02_test` was set for every pytest
-and alembic run, because `app/tests/conftest.py` on main uses the fixed name `acme_test` unless that variable is set.
+Two passes. Pass 1 ran on main at `ddfbfae` (PR 6), whose conftest used the fixed test database `acme_test` unless
+`ACME_TEST_DB` was set, so I set `ACME_TEST_DB=acme_02_test` (the commands below show it). Then main moved to `4e00962`
+(PR 7: a per-checkout test database `acme_<hash>_test`, dropped at the end). I merged that and ran the Check and the
+README's pytest line again, with no env prefix: the "Pass 2" rows at the end of the table.
 
 | Command | Result |
 |---|---|
@@ -46,6 +48,9 @@ and alembic run, because `app/tests/conftest.py` on main uses the fixed name `ac
 | restore → test | 3 passed |
 | episode 01's Break it (delete `session.commit()`) → test, then `git restore .` | `assert set() == {1042, 2077}`, then `git status --short` printed nothing |
 | ledger header plus one row, `git check-ignore -v data/ledger.md` | table renders; `.gitignore:27:data/` ignores it |
+| **Pass 2**, merged with `4e00962`: `uv run ruff check .`, `ruff format --check .`, `scripts/check_notebooks.py` | All checks passed; 70 files already formatted; 29 notebooks, 0 problems |
+| Pass 2: `uv run --group app pytest app/tests/test_ep01_postgres.py -x -s` (the README line, as written) | header `test database: acme_c6630af5_test`, 3 passed |
+| Pass 2: `uv run --group app pytest app/tests` (the SPEC.md Check's last part) | 5 passed; the test database was dropped at the end |
 | `inspect.signature(sqlalchemy.text)`, `Session.execute` | `text(text: 'str') -> 'TextClause'`; `execute(self, statement, params=None, *, …)` |
 
 ## Failed, or never ran
@@ -88,22 +93,29 @@ and alembic run, because `app/tests/conftest.py` on main uses the fixed name `ac
 
 ## Findings for the other specs (nothing here is changed by this PR)
 
-1. **The dev database `acme` is never seeded.** `alembic upgrade head` builds the tables; `seed()` is only called
+1. **The dev database `acme` is never seeded** (confirmed by accident, see "Shared state": order 1042 is not in `acme`). `alembic upgrade head` builds the tables; `seed()` is only called
    by the test fixtures (`app/tests/conftest.py`). `app/main.py` does not call it. Anyone who starts the app by hand
    (episodes 03-08) has no orders 1042 and 2077: `GET /orders/1042` is 404 and the desk's `lookup_order` finds nothing.
    Suggest a `seed` call at startup (`lifespan`) or a one-line command in the README wipe card. Spec 01 or 05 owns this.
 2. **Port 8000 is taken on this Mac** by a Docker process (a Dify stack). So the first `fastapi dev app/main.py`
    may fail with `[Errno 48]` on Siddharth's machine too. The README's error table says to use `--port 8001`.
    If you prefer, change the default in every episode instead.
-3. **conftest uses the fixed name `acme_test`** (override: `ACME_TEST_DB`), not the `acme_<sha1>_test` name the run
-   rules describe. I used `acme_02_test` and dropped it at the end. The README's pytest line has no env prefix,
-   which is right for a learner alone but would clash between parallel sessions.
+3. Resolved by PR 7 while I worked: conftest used the fixed name `acme_test` at `ddfbfae`; main now derives
+   `acme_<hash>_test` per checkout. The README's pytest line needs no env prefix and runs as written.
 4. `ruff format` formats code blocks in all Markdown. A bad Python block in any EPISODE.md fails `ci`. Run
    `uv run ruff format --check .` before pushing.
 
 ## Shared state I touched
 
-Created and dropped my own database `acme_02_test` on the shared Postgres. Ran `docker compose up -d --wait` once
+**My mistake: `alembic upgrade head` ran against the dev database `acme`.** In pass 2 I set `DATABASE_URL` from a shell
+variable that came back empty (`-q` hides the pytest header), so the URL ended in `/` and Postgres used the default
+database, `acme`. I noticed from the output (`0001 (head)`, and order 1042 not found). A read-only look afterwards:
+`acme` has `alembic_version` (`0001`), `orders`, `tickets`, `audit_log`, `refunds`, the tables are newer (by object id)
+than every other database, and `orders` is empty. So the command most likely built the schema in an empty `acme`; it
+adds tables and drops nothing. I did not undo it (a downgrade would be a second unasked change to a shared
+database). If someone expected `acme` to be empty, run `uv run --group app alembic downgrade base` against it.
+I created and dropped my own database `acme_02_test` on the shared Postgres (pass 1); in pass 2 conftest created and
+dropped `acme_c6630af5_test` itself. Ran `docker compose up -d --wait` once
 (a no-op on the running container). A scratch worktree of `origin/01-skeleton` and a local branch `play-ep01` were
 created and removed. One scratch clone read the main checkout's git objects (read-only). Nothing else was touched.
 
