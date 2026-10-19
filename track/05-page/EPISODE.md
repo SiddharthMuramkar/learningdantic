@@ -22,10 +22,10 @@ Use two terminal tabs: one for the server, one for everything else.
 3. Open <http://127.0.0.1:8000/> in your browser.
    > ✅ Checkpoint: a page called Acme Desk with "Signed in as ada", a Subject box, a log and a Message box.
 4. Type a subject (`Where is my mug?`) and click **New ticket**. Type `Where is order 1042?` and click **Send**.
-   > ✅ Checkpoint: the log shows `Ticket #1: Where is my mug?`, then your line, then a reply. No key in `.env`
+   > ✅ Checkpoint: the log shows `Ticket #<number>: Where is my mug?`, then your line, then a reply. No key in `.env`
    > means demo mode: a fake model answers, so the words look odd. That is fine; the round trip is the point.
-5. Open the browser's dev tools (`Cmd+Option+I` in Chrome), click the **Network** tab, then click **Send** again.
-   Click the row called `messages`.
+5. Open the browser's dev tools (`Cmd+Option+I` in Chrome), click the **Network** tab. Type
+   another message, click **Send**, then click the row called `messages`.
    > ✅ Checkpoint: **Headers** shows `x-demo-user: ada`, **Payload** shows `{"text": ...}`, **Response** shows
    > JSON with `ticket_id`, `category` and `message`. This is the whole conversation between page and server.
 6. Switch **Signed in as** to `bo` and click **Send** on the same ticket.

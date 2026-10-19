@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urljoin
 
 IDS = {"user", "subject", "new-ticket", "message", "send", "log"}
 APP_JS = Path(__file__).parents[1] / "static" / "app.js"
@@ -30,11 +31,11 @@ def test_page_has_every_contract_id_and_loads_both_scripts(client):
         assert f">{name}</option>" in response.text
     assert set(page.scripts) >= {"app.js", "approvals.js"}
     for src in page.scripts:  # a script tag that points nowhere would pass the lines above
-        assert client.get(f"/{src}").status_code == 200, src
+        assert client.get(urljoin("/", src)).status_code == 200, src
 
 
 def test_app_js_puts_text_in_with_textcontent_only():
     js = APP_JS.read_text()
-    assert "textContent" in js
+    assert ".textContent =" in js  # the assignment itself; the comments say the word too
     for unsafe in ("innerHTML", "outerHTML", "insertAdjacentHTML"):
         assert unsafe not in js

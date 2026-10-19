@@ -38,7 +38,18 @@ async function sendMessage() {
   if (reply.approval) window.showApproval?.(ticketId, reply.approval); // approvals.js draws the card
 }
 
-// Run an action; a failure becomes a line in the log (with its status code) instead of a silent console error.
-const guarded = (action) => () => action().catch((error) => addLine("error", error.message));
+// Run an action with its button switched off, so a double click can't send twice. A failure becomes a line
+// in the log (with its status code) instead of a silent console error.
+const guarded = (action) => async (event) => {
+  const button = event.currentTarget;
+  button.disabled = true;
+  try {
+    await action();
+  } catch (error) {
+    addLine("error", error.message);
+  } finally {
+    button.disabled = false;
+  }
+};
 $("new-ticket").onclick = guarded(newTicket);
 $("send").onclick = guarded(sendMessage);
