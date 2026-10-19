@@ -51,7 +51,7 @@ Docker Desktop must be running. Then, in the repo folder:
 - Step 5: what does the Network tab show for the Approve click?
 
 ## Break it
-Open `app/static/approvals.js` and change the button label `Approve` to `OK`. Guess what the test says, then run:
+Open `app/static/approvals.js`, go to line 13 and change the button label `Approve` to `OK`. Guess what the test says, then run:
 ```bash
 uv run --group app pytest app/tests/e2e -k approves --tracing retain-on-failure
 ```
