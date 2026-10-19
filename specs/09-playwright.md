@@ -21,8 +21,8 @@ Your piece: the Reject test body.
 
 ## Done when
 - [ ] The four e2e tests pass locally and in CI
-- [ ] Blanking the Reject test (`raise NotImplementedError`) turns it red (checked, then restored)
-- [ ] track/09-playwright/EPISODE.md in the contract format
+- [x] Blanking the Reject test (`raise NotImplementedError`) turns it red (checked, then restored)
+- [x] track/09-playwright/EPISODE.md in the contract format
 - [ ] The Check passes; /code-review and /security-review run, real findings fixed
 
 ## Touches
