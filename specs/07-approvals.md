@@ -22,7 +22,7 @@ Your piece: `execute_refund`.
       approve -> executed exactly once; a second approve -> 409; reject -> status rejected, nothing executed;
       ada calling the approve route -> 403; a refund from another ticket -> 409
 - [ ] Blanking `execute_refund` turns the test red (checked, then restored)
-- [ ] track/08-approvals/EPISODE.md in the contract format (break it: approve twice)
+- [x] track/08-approvals/EPISODE.md in the contract format (break it: approve twice)
 - [ ] The Check passes; /code-review and /security-review run, real findings fixed
 
 ## Touches
