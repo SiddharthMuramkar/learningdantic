@@ -1,5 +1,5 @@
 # 07 approvals
-Status: todo
+Status: done
 
 ## What and why
 A refund waits for a person, across two HTTP requests. Episode 08. Wave 3, after 04 and 05.
@@ -18,12 +18,12 @@ Live check: one staff refund chat on the real MODEL only if `has_key(MODEL)`; re
 Your piece: `execute_refund`.
 
 ## Done when
-- [ ] test_ep08_approvals.py: sam's refund chat returns an approval; the refund row is pending and NOT executed;
+- [x] test_ep08_approvals.py: sam's refund chat returns an approval; the refund row is pending and NOT executed;
       approve -> executed exactly once; a second approve -> 409; reject -> status rejected, nothing executed;
       ada calling the approve route -> 403; a refund from another ticket -> 409
-- [ ] Blanking `execute_refund` turns the test red (checked, then restored)
-- [ ] track/08-approvals/EPISODE.md in the contract format (break it: approve twice)
-- [ ] The Check passes; /code-review and /security-review run, real findings fixed
+- [x] Blanking `execute_refund` turns the test red (checked, then restored)
+- [x] track/08-approvals/EPISODE.md in the contract format (break it: approve twice)
+- [x] The Check passes; /code-review and /security-review run, real findings fixed
 
 ## Touches
 app/approvals.py, app/routes/approvals.py, app/static/approvals.js, app/tests/test_ep08_approvals.py, track/08-approvals/EPISODE.md
