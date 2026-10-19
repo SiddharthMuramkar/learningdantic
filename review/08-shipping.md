@@ -20,7 +20,7 @@ PR: branch `08-shipping` (title "08 shipping"). Built from `specs-base`, merged 
 | Red check A: `ask_shipping` without `@desk_tools.tool` | 3 failed (reply lacks the expert's sentence; `ask_shipping` not offered; eval 0.888 != 1.0). Restored: 3 passed |
 | Red check B (the episode's Break-it): `shipping_expert.run(question)` with no usage forwarding | `test_parcel_ticket_asks_shipping` fails with `assert 2 == 3`; 2 others pass. Restored: 3 passed |
 | `uv run python scripts/check_notebooks.py` | `checked 29 notebooks, 0 problem(s)` |
-| `uv run --group app pytest app/tests --ignore=app/tests/e2e` | `20 passed` |
+| `uv run --group app pytest app/tests --ignore=app/tests/e2e` | `20 passed` (after merging 03, 07, 09 too: `33 passed`, ruff and check_notebooks clean) |
 | `/code-review` (medium) | 5 findings, see below |
 | `/security-review` | no finding with confidence >= 8. Reasoning: the new code runs fixed ORM inserts, passes a model-written question to a sub-agent that has no tools, and adds static instructions; the tests are excluded |
 
