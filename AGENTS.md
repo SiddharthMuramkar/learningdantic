@@ -65,7 +65,7 @@ shared signatures, file owners and the episode format.
   change, stop and say so. The v2 rules above still apply to every Pydantic AI line you write here.
 - Look up each FastAPI, SQLAlchemy, Alembic, psycopg, Logfire, Pydantic AI and Playwright API in Context7, then
   confirm the installed signature: `uv run --group app python -c "import inspect, X; print(inspect.signature(X.f))"`.
-- `app/__init__.py` is where `setup()` runs, once. Never call `logfire.configure()` there or anywhere else.
+- `app/__init__.py` is where `setup()` runs, once. Never call `logfire.configure()` yourself.
   Agents run on `AGENT_MODEL`, which is `"test"` without a key. No test makes a live model call.
 - Routes that touch the database are plain `def` and take `SessionDep`. A route that runs an agent is
   `async def` and never holds a database session across an `await`. SQL uses bound parameters, never an f-string.

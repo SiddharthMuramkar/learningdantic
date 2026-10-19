@@ -1,6 +1,6 @@
 """Episode 01: Postgres is running, and seed() puts the demo orders in it."""
 
-from sqlalchemy import select, text
+from sqlalchemy import func, select, text
 
 from app.models import Order
 from app.seed import seed
@@ -22,4 +22,4 @@ def test_seed_adds_the_two_demo_orders(session):
 def test_seed_twice_changes_nothing(session):
     seed(session)
     seed(session)
-    assert session.query(Order).count() == 2
+    assert session.scalar(select(func.count()).select_from(Order)) == 2
